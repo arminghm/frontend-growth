@@ -2,7 +2,7 @@
 
 ## Current level
 
-**3 — APPLY**, with internals at **2-3**.
+**2-3 — EXPLAIN/APPLY**, with uneven depth across practical APIs and component-design patterns.
 
 ## Demonstrated strengths
 
@@ -26,9 +26,18 @@
 - `cloneElement` and modern alternatives,
 - SSR vs Server Component hook constraints.
 
+## Newly identified interview gaps
+
+- React component API/design patterns are not yet deep enough.
+- Compound Components pattern was not recognized/applied in a Tabs design question.
+- Need applied coverage of Compound Components, Controlled/Uncontrolled components, Headless/compound APIs, Render Props, HOC legacy context, state reducer/slot-style patterns, and when composition is preferable to prop-heavy APIs.
+- Context vs Zustand/global-store reasoning needs stronger ownership/update-frequency/subscription-granularity explanations under interview pressure.
+
 ## Next verification
 
-- Fiber/reconciliation scenario,
-- effect lifecycle scenario,
-- Context/store design scenario,
-- Suspense with Client Component vs Server Component distinctions.
+1. design a Tabs API using Compound Components and explain trade-offs,
+2. compare Compound Components vs controlled props vs render props,
+3. Fiber/reconciliation scenario,
+4. effect lifecycle scenario,
+5. Context/store design scenario,
+6. Suspense with Client Component vs Server Component distinctions.
