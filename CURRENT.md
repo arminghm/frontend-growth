@@ -4,18 +4,45 @@
 
 **One-week Senior Frontend interview sprint**
 
-A technical interview is scheduled for the end of this week. Until that interview, optimize for interview readiness rather than broad long-term coverage.
+The end-of-week session is a mock interview with an experienced Frontend Chapter Lead. Treat it as a high-value external assessment and optimize the week to expose and repair interview weaknesses.
 
-Primary targets:
+## Sprint cadence
 
-- repair high-risk JavaScript language semantics,
-- consolidate React internals that commonly appear in interviews,
-- retest previously corrected topics without hints,
-- practice concise Senior-level explanations,
-- run at least one mixed mock interview before the interview,
-- prioritize issues observed in the user's previous real interview as soon as they are recorded.
+### Days 1–3 — Breadth and high-frequency interview coverage
 
-## JavaScript verification targets
+Goal: close obvious gaps and make common Senior Frontend questions answerable without hesitation.
+
+Prioritize:
+
+- JavaScript language semantics,
+- React internals and lifecycle,
+- browser/rendering fundamentals,
+- state management trade-offs,
+- performance basics,
+- modern Next.js fundamentals,
+- testing concepts that commonly appear in interviews.
+
+Use real-interview issues as first-class priority signals.
+
+### Days 4–6 — Depth and reasoning
+
+Goal: deepen mental models rather than add many new topics.
+
+Focus on:
+
+- explaining why, not only what,
+- edge cases and trade-offs,
+- hard JavaScript snippets,
+- React render/reconciliation reasoning,
+- architecture/system-design follow-ups,
+- debugging/performance scenarios,
+- concise Senior-level answers.
+
+### Day 7 — Mock interview only
+
+Run a mixed Senior Frontend mock without hints. Use it to identify the final remaining weak spots before the external mock interview.
+
+## Current JavaScript verification targets
 
 - property lookup vs enumerability,
 - own vs inherited properties,
@@ -28,7 +55,7 @@ Primary targets:
 - TDZ and lexical environments,
 - Promise/microtask edge cases.
 
-## React verification targets
+## Current React verification targets
 
 - Fiber tree,
 - render vs commit,
@@ -42,7 +69,7 @@ Primary targets:
 
 ## Secondary practical target
 
-**Testing** remains a real gap, but during the one-week sprint only cover the highest-yield practical/testing questions unless the target interview is known to emphasize testing.
+**Testing** remains a real gap. During this sprint, prioritize high-yield interview understanding first; deeper implementation work can continue after the external mock unless prior-interview evidence suggests testing is a major interview risk.
 
 ## Recently demonstrated strengths
 
@@ -56,4 +83,4 @@ Primary targets:
 
 ## Next action
 
-Collect and record the problems encountered in the previous real interview. Re-rank the one-week sprint based on those signals, then continue `JavaScript Deep Dive` on the highest-risk gaps.
+Collect the problems encountered in the previous real interview. Classify them as `must fix this week`, `should review`, or `already strong`, then use them to finalize the Days 1–3 breadth plan.
