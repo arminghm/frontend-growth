@@ -2,9 +2,20 @@
 
 ## Immediate priority
 
-**JavaScript foundations and language semantics**
+**One-week Senior Frontend interview sprint**
 
-Current verification targets:
+A technical interview is scheduled for the end of this week. Until that interview, optimize for interview readiness rather than broad long-term coverage.
+
+Primary targets:
+
+- repair high-risk JavaScript language semantics,
+- consolidate React internals that commonly appear in interviews,
+- retest previously corrected topics without hints,
+- practice concise Senior-level explanations,
+- run at least one mixed mock interview before the interview,
+- prioritize issues observed in the user's previous real interview as soon as they are recorded.
+
+## JavaScript verification targets
 
 - property lookup vs enumerability,
 - own vs inherited properties,
@@ -17,24 +28,21 @@ Current verification targets:
 - TDZ and lexical environments,
 - Promise/microtask edge cases.
 
-## Secondary priority
-
-**React internals consolidation**
+## React verification targets
 
 - Fiber tree,
 - render vs commit,
-- reconciliation,
-- effect ordering,
-- `useLayoutEffect`,
-- Context trade-offs,
+- reconciliation and identity,
+- effect lifecycle and ordering,
+- `useEffect` vs `useLayoutEffect`,
+- Context vs global/external stores,
 - portals,
-- Server vs Client Component boundaries.
+- Server vs Client Component boundaries,
+- modern Next.js fundamentals where relevant.
 
-## Practical gap
+## Secondary practical target
 
-**Testing experience**
-
-Move from conceptual familiarity to applied tests with React Testing Library, Vitest, MSW, fake timers, and a small E2E flow.
+**Testing** remains a real gap, but during the one-week sprint only cover the highest-yield practical/testing questions unless the target interview is known to emphasize testing.
 
 ## Recently demonstrated strengths
 
@@ -46,6 +54,6 @@ Move from conceptual familiarity to applied tests with React Testing Library, Vi
 - server-state reasoning with TanStack Query,
 - concurrency and server-authority reasoning.
 
-## Next session
+## Next action
 
-Start in `JavaScript Deep Dive` with a short diagnostic on coercion, prototype/property semantics, `this`, and Promise resolution. Do not teach first; assess first, then repair gaps.
+Collect and record the problems encountered in the previous real interview. Re-rank the one-week sprint based on those signals, then continue `JavaScript Deep Dive` on the highest-risk gaps.
