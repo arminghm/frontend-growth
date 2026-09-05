@@ -1,0 +1,34 @@
+---
+import LevelBadge from './LevelBadge.astro';
+import type { Domain } from '../lib/types';
+
+interface Props {
+  domain: Domain;
+}
+
+const { domain } = Astro.props;
+---
+<article class="domain-card">
+  <div class="domain-card__head">
+    <h3>{domain.name}</h3>
+    <LevelBadge score={domain.score} />
+  </div>
+
+  <div class="progress-track" aria-label={`${domain.name}: ${domain.score} of 5`}>
+    <span style={`width:${(domain.score / 5) * 100}%`}></span>
+  </div>
+
+  <p>{domain.summary}</p>
+
+  <div class="subskill-list">
+    {domain.subskills.map((subskill) => (
+      <div class="subskill-row">
+        <span>{subskill.name}</span>
+        <div class="mini-track" aria-hidden="true">
+          <span style={`width:${(subskill.score / 5) * 100}%`}></span>
+        </div>
+        <strong>{subskill.score.toFixed(1)}</strong>
+      </div>
+    ))}
+  </div>
+</article>

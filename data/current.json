@@ -1,0 +1,195 @@
+{
+  "updatedAt": "2026-09-05",
+  "currentFocus": "One-week Senior Frontend interview sprint",
+  "scale": [
+    { "score": 0, "label": "UNKNOWN" },
+    { "score": 1, "label": "AWARE" },
+    { "score": 2, "label": "EXPLAIN" },
+    { "score": 3, "label": "APPLY" },
+    { "score": 4, "label": "REASON" },
+    { "score": 5, "label": "DESIGN/TEACH" }
+  ],
+  "domains": [
+    {
+      "id": "javascript",
+      "name": "JavaScript",
+      "score": 2,
+      "status": "developing",
+      "summary": "Exact language semantics remain the main interview risk.",
+      "subskills": [
+        { "id": "scope-closures", "name": "Scope & Closures", "score": 2, "status": "developing" },
+        { "id": "this", "name": "this / bind / call / apply", "score": 1, "status": "gap" },
+        { "id": "prototype-properties", "name": "Prototype & Properties", "score": 1, "status": "gap" },
+        { "id": "equality", "name": "Equality / Object.is", "score": 1, "status": "gap" },
+        { "id": "coercion", "name": "Coercion", "score": 0, "status": "gap" },
+        { "id": "event-loop", "name": "Event Loop / Promises", "score": 2, "status": "developing" }
+      ]
+    },
+    {
+      "id": "react",
+      "name": "React",
+      "score": 2.5,
+      "status": "developing",
+      "summary": "Applied React is stronger than component API patterns and internals.",
+      "subskills": [
+        { "id": "state-ownership", "name": "State Ownership", "score": 4, "status": "strong" },
+        { "id": "component-patterns", "name": "Component API / Design Patterns", "score": 1, "status": "gap" },
+        { "id": "compound-components", "name": "Compound Components", "score": 1, "status": "gap" },
+        { "id": "context-stores", "name": "Context / External Stores", "score": 2, "status": "developing" },
+        { "id": "reconciliation", "name": "Rendering & Reconciliation", "score": 2.5, "status": "developing" },
+        { "id": "fiber", "name": "Fiber", "score": 2, "status": "developing" },
+        { "id": "effects", "name": "Effects & Lifecycle", "score": 2.5, "status": "developing" },
+        { "id": "performance", "name": "React Performance", "score": 4, "status": "strong" },
+        { "id": "suspense-rsc", "name": "Suspense / RSC", "score": 2, "status": "developing" }
+      ]
+    },
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "score": 3,
+      "status": "good",
+      "summary": "Good practical base; advanced type-system depth needs verification.",
+      "subskills": [
+        { "id": "unions-narrowing", "name": "Unions / Narrowing", "score": 3, "status": "good" },
+        { "id": "generics", "name": "Generics", "score": 3, "status": "good" },
+        { "id": "exhaustiveness", "name": "Exhaustiveness", "score": 3, "status": "good" },
+        { "id": "conditional-types", "name": "Conditional Types", "score": 1, "status": "gap" },
+        { "id": "infer", "name": "infer", "score": 1, "status": "gap" },
+        { "id": "satisfies", "name": "satisfies", "score": 1, "status": "gap" },
+        { "id": "unknown-any-never", "name": "unknown / any / never", "score": 2, "status": "developing" }
+      ]
+    },
+    {
+      "id": "browser",
+      "name": "Browser",
+      "score": 2.5,
+      "status": "developing",
+      "summary": "Browser internals are stronger than platform API breadth.",
+      "subskills": [
+        { "id": "rendering-pipeline", "name": "Rendering Pipeline", "score": 3, "status": "good" },
+        { "id": "layout-paint", "name": "Layout / Paint", "score": 3, "status": "good" },
+        { "id": "event-loop", "name": "Event Loop", "score": 3, "status": "good" },
+        { "id": "workers", "name": "Web Workers", "score": 4, "status": "strong" },
+        { "id": "cross-tab", "name": "Cross-tab Communication", "score": 1, "status": "gap" },
+        { "id": "service-worker-cache", "name": "Service Worker / Cache Storage", "score": 1, "status": "gap" }
+      ]
+    },
+    {
+      "id": "architecture",
+      "name": "Architecture",
+      "score": 4,
+      "status": "strong",
+      "summary": "Strong boundaries, ownership, dependency direction and system trade-offs.",
+      "subskills": [
+        { "id": "boundaries", "name": "Boundaries", "score": 4, "status": "strong" },
+        { "id": "dip", "name": "Dependency Inversion", "score": 4, "status": "strong" },
+        { "id": "state-ownership", "name": "State Ownership", "score": 4, "status": "strong" },
+        { "id": "event-driven", "name": "Event-driven Trade-offs", "score": 4, "status": "strong" },
+        { "id": "system-design", "name": "Frontend System Design", "score": 4, "status": "strong" }
+      ]
+    },
+    {
+      "id": "realtime",
+      "name": "Realtime",
+      "score": 4,
+      "status": "strong",
+      "summary": "Strong snapshot/delta, reconnect, buffering and resync reasoning.",
+      "subskills": [
+        { "id": "websocket", "name": "WebSocket", "score": 4, "status": "strong" },
+        { "id": "snapshot-delta", "name": "Snapshot + Delta", "score": 4, "status": "strong" },
+        { "id": "reconnect-resync", "name": "Reconnect / Resync", "score": 4, "status": "strong" },
+        { "id": "high-frequency-ui", "name": "High-frequency UI", "score": 4, "status": "strong" }
+      ]
+    },
+    {
+      "id": "performance",
+      "name": "Performance",
+      "score": 4,
+      "status": "strong",
+      "summary": "Strong profiling-first and main-thread/rendering performance reasoning.",
+      "subskills": [
+        { "id": "profiling", "name": "Profiling & Measurement", "score": 4, "status": "strong" },
+        { "id": "virtualization", "name": "Virtualization", "score": 4, "status": "strong" },
+        { "id": "long-tasks-inp", "name": "Long Tasks / INP", "score": 4, "status": "strong" },
+        { "id": "raf", "name": "requestAnimationFrame", "score": 4, "status": "strong" }
+      ]
+    },
+    {
+      "id": "design-principles",
+      "name": "Design Principles",
+      "score": 1.5,
+      "status": "gap",
+      "summary": "Formal principles and applied pattern reasoning are current interview gaps.",
+      "subskills": [
+        { "id": "coupling-cohesion", "name": "Coupling / Cohesion", "score": 1, "status": "gap" },
+        { "id": "grasp", "name": "GRASP", "score": 0, "status": "gap" },
+        { "id": "solid", "name": "SOLID", "score": 2, "status": "developing" },
+        { "id": "strategy", "name": "Strategy", "score": 2, "status": "developing" },
+        { "id": "factory-ocp", "name": "Factory / OCP", "score": 1, "status": "gap" }
+      ]
+    },
+    {
+      "id": "testing",
+      "name": "Testing",
+      "score": 1.5,
+      "status": "gap",
+      "summary": "Concepts are developing; practical implementation experience is limited.",
+      "subskills": [
+        { "id": "concepts", "name": "Testing Concepts", "score": 2, "status": "developing" },
+        { "id": "rtl", "name": "React Testing Library", "score": 1, "status": "gap" },
+        { "id": "msw", "name": "MSW / Network Testing", "score": 1, "status": "gap" },
+        { "id": "e2e", "name": "E2E Practice", "score": 1, "status": "gap" }
+      ]
+    },
+    {
+      "id": "nextjs",
+      "name": "Next.js",
+      "score": 2.5,
+      "status": "developing",
+      "summary": "RSC/SSR mental model is improving; App Router and caching need depth.",
+      "subskills": [
+        { "id": "ssr-rsc", "name": "SSR / RSC", "score": 2.5, "status": "developing" },
+        { "id": "app-router", "name": "App Router", "score": 2, "status": "developing" },
+        { "id": "caching", "name": "Caching / Revalidation", "score": 1, "status": "gap" },
+        { "id": "bff", "name": "BFF", "score": 2.5, "status": "developing" }
+      ]
+    },
+    {
+      "id": "api-design",
+      "name": "API Design",
+      "score": 1.5,
+      "status": "gap",
+      "summary": "GraphQL trade-offs and query cost/security controls need stronger reasoning.",
+      "subskills": [
+        { "id": "graphql", "name": "GraphQL Trade-offs", "score": 1, "status": "gap" },
+        { "id": "rest", "name": "REST", "score": 3, "status": "good" },
+        { "id": "bff", "name": "BFF", "score": 2.5, "status": "developing" },
+        { "id": "query-cost", "name": "Query Cost / Security Controls", "score": 1, "status": "gap" }
+      ]
+    },
+    {
+      "id": "security",
+      "name": "Security",
+      "score": 3,
+      "status": "good",
+      "summary": "Good conceptual model of XSS, CSRF, CSP, cookies and iframe boundaries.",
+      "subskills": [
+        { "id": "xss", "name": "XSS", "score": 3, "status": "good" },
+        { "id": "csrf", "name": "CSRF", "score": 3, "status": "good" },
+        { "id": "csp", "name": "CSP", "score": 3, "status": "good" }
+      ]
+    },
+    {
+      "id": "accessibility",
+      "name": "Accessibility",
+      "score": 3,
+      "status": "good",
+      "summary": "Good conceptual knowledge of semantics, forms and modal/focus behavior.",
+      "subskills": [
+        { "id": "semantics", "name": "Semantics", "score": 3, "status": "good" },
+        { "id": "forms", "name": "Forms", "score": 3, "status": "good" },
+        { "id": "focus-modals", "name": "Focus / Modals", "score": 3, "status": "good" }
+      ]
+    }
+  ]
+}

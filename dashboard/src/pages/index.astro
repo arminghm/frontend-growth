@@ -1,227 +1,160 @@
 ---
-import { readFile } from 'node:fs/promises';
-import '../styles/global.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DomainCard from '../components/DomainCard.astro';
+import LevelBadge from '../components/LevelBadge.astro';
+import {
+  loadCurrentProgress,
+  loadProgressHistory,
+  loadTimeline
+} from '../lib/progress';
 
-type Status = 'strong' | 'good' | 'developing' | 'gap';
-type RoadmapStatus = 'active' | 'ongoing' | 'queued';
-type MilestoneStatus = 'completed' | 'upcoming';
+const current = await loadCurrentProgress();
+const history = await loadProgressHistory();
+const timeline = await loadTimeline();
 
-type Domain = {
-  id: string;
-  name: string;
-  level?: number;
-  levelRange?: [number, number];
-  assessment: string;
-};
+const distribution = Array.from({ length: 6 }, (_, score) => ({
+  score,
+  count: current.domains
+    .flatMap((domain) => domain.subskills)
+    .filter((subskill) => Math.round(subskill.score) === score)
+    .length,
+}));
 
-type SkillGroup = {
-  id: string;
-  name: string;
-  subskills: Array<{ name: string; status: Status }>;
-};
-
-type ProgressData = {
-  schemaVersion: number;
-  updatedAt: string;
-  currentFocus: {
-    title: string;
-    objective: string;
-    nextAction: string;
-    priorities: string[];
-  };
-  domains: Domain[];
-  skillGroups: SkillGroup[];
-  roadmap: Array<{ id: string; title: string; status: RoadmapStatus }>;
-  milestones: Array<{ date?: string; title: string; status: MilestoneStatus; source: string }>;
-  timeline: Array<{ date: string; type: string; title: string; summary: string; source: string }>;
-};
-
-const progressUrl = new URL('../../../progress/progress.json', import.meta.url);
-const progress = JSON.parse(await readFile(progressUrl, 'utf8')) as ProgressData;
-
-const levelValue = (domain: Domain) =>
-  typeof domain.level === 'number'
-    ? domain.level
-    : domain.levelRange
-      ? (domain.levelRange[0] + domain.levelRange[1]) / 2
-      : 0;
-
-const levelLabel = (domain: Domain) =>
-  typeof domain.level === 'number'
-    ? String(domain.level)
-    : domain.levelRange
-      ? domain.levelRange.join('–')
-      : '—';
-
-const statusLabel: Record<Status, string> = {
-  strong: 'Strong',
-  good: 'Good',
-  developing: 'Developing',
-  gap: 'Gap'
-};
+const strongest = [...current.domains].sort((a, b) => b.score - a.score).slice(0, 4);
+const biggestGaps = [...current.domains].sort((a, b) => a.score - b.score).slice(0, 4);
 ---
+<BaseLayout title="Frontend Growth Dashboard">
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <span class="eyebrow">FRONTEND GROWTH</span>
+        <h1>Learning Progress Dashboard</h1>
+        <p class="lede">
+          Evidence-driven proficiency tracking for Senior Frontend interview readiness.
+        </p>
+      </div>
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Evidence-backed Frontend Growth progress dashboard" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Frontend Growth Dashboard</title>
-  </head>
-  <body>
-    <main class="shell">
-      <header class="hero">
+      <aside class="focus-card">
+        <span>Current focus</span>
+        <strong>{current.currentFocus}</strong>
+        <small>Updated {current.updatedAt}</small>
+      </aside>
+    </header>
+
+    <section class="summary-grid">
+      <article class="panel">
+        <span class="kicker">STRONGEST AREAS</span>
+        <div class="stack-list">
+          {strongest.map((domain) => (
+            <div class="summary-row">
+              <span>{domain.name}</span>
+              <LevelBadge score={domain.score} />
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <article class="panel">
+        <span class="kicker">CURRENT GAPS</span>
+        <div class="stack-list">
+          {biggestGaps.map((domain) => (
+            <div class="summary-row">
+              <span>{domain.name}</span>
+              <LevelBadge score={domain.score} />
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <article class="panel">
+        <span class="kicker">SKILL DISTRIBUTION</span>
+        <div class="distribution">
+          {distribution.map(({ score, count }) => (
+            <div class="distribution__item">
+              <strong>{count}</strong>
+              <span>L{score}</span>
+            </div>
+          ))}
+        </div>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
         <div>
-          <p class="eyebrow">Frontend Growth</p>
-          <h1>Progress Dashboard</h1>
-          <p class="hero-copy">
-            Persistent, evidence-backed view of current focus, proficiency, roadmap, subskills, and progress over time.
-          </p>
+          <span class="kicker">OVERVIEW</span>
+          <h2>Domains & subskills</h2>
         </div>
-        <div class="updated">Updated {progress.updatedAt}</div>
-      </header>
+        <p>
+          0 UNKNOWN · 1 AWARE · 2 EXPLAIN · 3 APPLY · 4 REASON · 5 DESIGN/TEACH
+        </p>
+      </div>
 
-      <section class="focus card" aria-labelledby="focus-title">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Current Focus</p>
-            <h2 id="focus-title">{progress.currentFocus.title}</h2>
-          </div>
-        </div>
-        <p>{progress.currentFocus.objective}</p>
-        <div class="focus-grid">
-          <div>
-            <h3>Next action</h3>
-            <p>{progress.currentFocus.nextAction}</p>
-          </div>
-          <div>
-            <h3>Priorities</h3>
-            <ol>
-              {progress.currentFocus.priorities.map((priority) => <li>{priority}</li>)}
-            </ol>
-          </div>
-        </div>
-      </section>
+      <div class="domain-grid">
+        {current.domains.map((domain) => (
+          <DomainCard domain={domain} />
+        ))}
+      </div>
+    </section>
 
-      <section>
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Assessment</p>
-            <h2>Domain proficiency</h2>
-          </div>
-          <p class="muted">0 Unknown · 1 Aware · 2 Explain · 3 Apply · 4 Reason · 5 Design/Teach</p>
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">PROGRESS OVER TIME</span>
+          <h2>Historical snapshots</h2>
         </div>
-        <div class="domain-grid">
-          {progress.domains.map((domain) => {
-            const value = levelValue(domain);
-            const label = levelLabel(domain);
-            const width = Math.max(0, Math.min(100, (value / 5) * 100));
-            return (
-              <article class="domain-card">
-                <div class="domain-top">
-                  <div class="domain-name">{domain.name}</div>
-                  <div class="score">{label}</div>
-                </div>
-                <div class="bar" aria-label={`${domain.name} proficiency ${label} out of 5`}>
-                  <span style={`width:${width}%`}></span>
-                </div>
-                <p class="assessment">{domain.assessment}</p>
-              </article>
-            );
-          })}
-        </div>
-      </section>
+        <p>Snapshots are added only after meaningful proficiency changes.</p>
+      </div>
 
-      <section>
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Skill Map</p>
-            <h2>Subskills</h2>
-          </div>
-          <div class="legend" aria-label="Subskill status legend">
-            {(Object.entries(statusLabel) as Array<[Status, string]>).map(([status, label]) => (
-              <span><i class={`dot ${status}`}></i>{label}</span>
-            ))}
-          </div>
-        </div>
-        <div class="skill-grid">
-          {progress.skillGroups.map((group) => (
-            <article class="skill-group">
-              <h3>{group.name}</h3>
-              <div class="chips">
-                {group.subskills.map((skill) => (
-                  <span class={`chip ${skill.status}`}>
-                    <i class="dot"></i>{skill.name}
-                  </span>
+      <div class="panel history-table-wrap">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              {current.domains.map((domain) => <th>{domain.name}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {history.snapshots.map((snapshot) => (
+              <tr>
+                <td>{snapshot.date}</td>
+                {current.domains.map((domain) => (
+                  <td>{snapshot.scores[domain.id]?.toFixed(1) ?? '—'}</td>
                 ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">TIMELINE</span>
+          <h2>Evidence & milestones</h2>
+        </div>
+      </div>
+
+      <div class="timeline">
+        {timeline.items.map((item) => (
+          <article class="timeline-item">
+            <time>{item.date}</time>
+            <div>
+              <div class="timeline-title">
+                <strong>{item.title}</strong>
+                <span class="timeline-type">{item.type}</span>
               </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section class="two-column">
-        <div>
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">Plan</p>
-              <h2>Roadmap</h2>
+              <p>{item.detail}</p>
             </div>
-          </div>
-          <div class="stack">
-            {progress.roadmap.map((item) => (
-              <article class="roadmap-item">
-                <p class="item-title">{item.title}</p>
-                <span class={`badge ${item.status}`}>{item.status}</span>
-              </article>
-            ))}
-          </div>
-        </div>
+          </article>
+        ))}
+      </div>
+    </section>
 
-        <div>
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">Progress</p>
-              <h2>Milestones</h2>
-            </div>
-          </div>
-          <div class="stack">
-            {progress.milestones.map((item) => (
-              <article class="milestone-item">
-                <div>
-                  <p class="item-title">{item.title}</p>
-                  {item.date && <div class="item-meta">{item.date}</div>}
-                </div>
-                <span class={`badge ${item.status}`}>{item.status}</span>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">History</p>
-            <h2>Timeline</h2>
-          </div>
-        </div>
-        <div class="timeline">
-          {[...progress.timeline].reverse().map((item) => (
-            <article class="timeline-entry">
-              <div class="timeline-date">{item.date} · {item.type}</div>
-              <h3>{item.title}</h3>
-              <p>{item.summary}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <footer>
-        Data source: <code>progress/progress.json</code>. Assessments change only when repository evidence justifies a material update.
-      </footer>
-    </main>
-  </body>
-</html>
+    <footer>
+      <span>Canonical source of truth: <strong>arminghm/frontend-growth</strong></span>
+      <span>Dashboard data is a projection of repository evidence, not independent evidence.</span>
+    </footer>
+  </main>
+</BaseLayout>

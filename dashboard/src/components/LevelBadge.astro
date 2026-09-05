@@ -1,0 +1,17 @@
+---
+interface Props {
+  score: number;
+  label?: string;
+}
+
+const { score, label } = Astro.props;
+const rounded = Math.max(0, Math.min(5, Math.round(score)));
+const tone =
+  rounded <= 1 ? 'gap' :
+  rounded === 2 ? 'developing' :
+  rounded === 3 ? 'good' :
+  'strong';
+---
+<span class:list={['level-badge', tone]}>
+  {label ?? `${score.toFixed(1)} / 5`}
+</span>
