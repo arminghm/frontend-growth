@@ -1,3 +1,4 @@
+# GitHub Pages source: GitHub Actions. This workflow is the sole deployment path.
 name: Deploy dashboard to GitHub Pages
 
 on:
