@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-09-05",
+  "sources": [
+    "CURRENT.md",
+    "STATUS.md",
+    "ROADMAP.md",
+    "maps/frontend.md",
+    "evidence/2026-09-04-initial-assessment.md",
+    "evidence/2026-09-04-real-interview-gaps.md"
+  ],
+  "scale": [
+    { "level": 0, "label": "UNKNOWN", "description": "No demonstrated knowledge." },
+    { "level": 1, "label": "AWARE", "description": "Recognizes the concept and its purpose." },
+    { "level": 2, "label": "EXPLAIN", "description": "Can explain the concept accurately." },
+    { "level": 3, "label": "APPLY", "description": "Can use it correctly in realistic tasks." },
+    { "level": 4, "label": "REASON", "description": "Can analyze trade-offs, edge cases, and failures." },
+    { "level": 5, "label": "DESIGN/TEACH", "description": "Can design complex solutions and teach the mental model clearly." }
+  ],
+  "currentFocus": {
+    "title": "One-week Senior Frontend interview sprint",
+    "objective": "Expose and repair interview weaknesses before the end-of-week external mock interview.",
+    "nextAction": "Start Days 1–3 breadth coverage with React patterns and design principles, while keeping a parallel JavaScript diagnostic track.",
+    "priorities": [
+      "React component/design patterns and Context/store reasoning",
+      "Design principles and patterns: coupling/cohesion, GRASP, SOLID, Factory/Strategy/OCP",
+      "JavaScript language semantics",
+      "Browser platform APIs and Service Worker caching",
+      "TypeScript advanced features",
+      "GraphQL/API design trade-offs",
+      "React internals/lifecycle consolidation"
+    ]
+  },
+  "domains": [
+    { "id": "frontend-architecture", "name": "Frontend Architecture", "level": 4, "assessment": "Strong reasoning about boundaries, ownership, orchestration, DIP, and trade-offs." },
+    { "id": "realtime-websocket", "name": "Realtime / WebSocket", "level": 4, "assessment": "Strong snapshot/delta, reconnect, buffering, sequence, resync, stale-data reasoning." },
+    { "id": "state-management", "name": "State Management", "level": 4, "assessment": "Strong server/client ownership, TanStack Query, URL/local/global state decisions." },
+    { "id": "frontend-system-design", "name": "Frontend System Design", "level": 4, "assessment": "Strong degraded-mode, server-authority, idempotency, failure-isolation reasoning." },
+    { "id": "performance", "name": "Performance", "level": 4, "assessment": "Strong profiling-first approach, rAF, virtualization, rendering pipeline, Worker boundaries." },
+    { "id": "react-practical", "name": "React Practical", "level": 3, "assessment": "Good applied knowledge; internals still need consolidation." },
+    { "id": "react-internals", "name": "React Internals", "levelRange": [2, 3], "assessment": "Developing: Fiber, effect ordering, lifecycle details, Context nuances recently reinforced." },
+    { "id": "browser-internals", "name": "Browser Internals", "level": 3, "assessment": "Good event-loop/rendering model; some edge cases still need retesting." },
+    { "id": "typescript", "name": "TypeScript", "levelRange": [3, 4], "assessment": "Good unions, narrowing, generics, exhaustiveness, utility types." },
+    { "id": "security", "name": "Security", "level": 3, "assessment": "Good conceptual model of XSS, CSRF, CSP, cookies, iframe/clickjacking." },
+    { "id": "accessibility", "name": "Accessibility", "level": 3, "assessment": "Good conceptual knowledge of semantics, forms, modal/focus behavior." },
+    { "id": "testing", "name": "Testing", "levelRange": [1, 2], "assessment": "Conceptual understanding improved; practical experience remains limited." },
+    { "id": "nextjs", "name": "Next.js", "levelRange": [2, 3], "assessment": "RSC/SSR mental model improving; modern App Router details need consolidation." },
+    { "id": "javascript", "name": "JavaScript Fundamentals", "level": 2, "assessment": "Main current risk: language semantics and exact behavior under interview pressure." },
+    { "id": "backend-concurrency", "name": "Backend Concurrency Concepts", "levelRange": [2, 3], "assessment": "Good atomicity/server-authority reasoning; terminology and implementation primitives need polish." }
+  ],
+  "skillGroups": [
+    {
+      "id": "javascript",
+      "name": "JavaScript",
+      "subskills": [
+        { "name": "Scope & Closures", "status": "developing" },
+        { "name": "this / bind / call / apply", "status": "gap" },
+        { "name": "Prototype & Properties", "status": "gap" },
+        { "name": "Equality / Object.is", "status": "gap" },
+        { "name": "Coercion", "status": "gap" },
+        { "name": "Event Loop / Promises", "status": "developing" }
+      ]
+    },
+    {
+      "id": "react",
+      "name": "React",
+      "subskills": [
+        { "name": "State Ownership", "status": "strong" },
+        { "name": "Rendering & Reconciliation", "status": "developing" },
+        { "name": "Fiber", "status": "developing" },
+        { "name": "Effects", "status": "developing" },
+        { "name": "Performance", "status": "strong" },
+        { "name": "Context / Stores", "status": "good" },
+        { "name": "Suspense / RSC", "status": "developing" }
+      ]
+    },
+    {
+      "id": "architecture",
+      "name": "Architecture",
+      "subskills": [
+        { "name": "Boundaries", "status": "strong" },
+        { "name": "Dependency Inversion", "status": "strong" },
+        { "name": "Event-driven Trade-offs", "status": "strong" },
+        { "name": "System Design", "status": "strong" }
+      ]
+    },
+    {
+      "id": "realtime",
+      "name": "Realtime",
+      "subskills": [
+        { "name": "WebSocket", "status": "strong" },
+        { "name": "Snapshot + Delta", "status": "strong" },
+        { "name": "Reconnect / Resync", "status": "strong" },
+        { "name": "High-frequency UI", "status": "strong" }
+      ]
+    },
+    {
+      "id": "browser-performance",
+      "name": "Browser & Performance",
+      "subskills": [
+        { "name": "Rendering Pipeline", "status": "good" },
+        { "name": "Layout / Paint", "status": "good" },
+        { "name": "Long Tasks / INP", "status": "strong" },
+        { "name": "Web Workers", "status": "strong" }
+      ]
+    },
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "subskills": [
+        { "name": "Unions / Narrowing", "status": "good" },
+        { "name": "Generics", "status": "good" },
+        { "name": "Exhaustiveness", "status": "good" }
+      ]
+    },
+    {
+      "id": "testing",
+      "name": "Testing",
+      "subskills": [
+        { "name": "Concepts", "status": "developing" },
+        { "name": "Practical Experience", "status": "gap" }
+      ]
+    },
+    {
+      "id": "nextjs",
+      "name": "Next.js",
+      "subskills": [
+        { "name": "SSR / RSC", "status": "developing" },
+        { "name": "App Router", "status": "developing" },
+        { "name": "Caching / Revalidation", "status": "gap" },
+        { "name": "BFF", "status": "developing" }
+      ]
+    },
+    {
+      "id": "security",
+      "name": "Security",
+      "subskills": [
+        { "name": "XSS / CSRF / CSP", "status": "good" }
+      ]
+    },
+    {
+      "id": "accessibility",
+      "name": "Accessibility",
+      "subskills": [
+        { "name": "Semantics / Forms / Modals", "status": "good" }
+      ]
+    }
+  ],
+  "roadmap": [
+    { "id": "phase-1", "title": "Repair high-risk JavaScript foundations", "status": "active" },
+    { "id": "phase-2", "title": "Consolidate React internals", "status": "queued" },
+    { "id": "phase-3", "title": "Build testing competence", "status": "queued" },
+    { "id": "phase-4", "title": "Modern Next.js consolidation", "status": "queued" },
+    { "id": "phase-5", "title": "Maintain Senior strengths", "status": "ongoing" }
+  ],
+  "milestones": [
+    { "date": "2026-09-04", "title": "Initial assessment recorded", "status": "completed", "source": "evidence/2026-09-04-initial-assessment.md" },
+    { "date": "2026-09-04", "title": "Real interview gaps captured", "status": "completed", "source": "evidence/2026-09-04-real-interview-gaps.md" },
+    { "title": "End-of-week mixed Senior Frontend mock interview", "status": "upcoming", "source": "CURRENT.md" }
+  ],
+  "timeline": [
+    {
+      "date": "2026-09-04",
+      "type": "assessment",
+      "title": "Initial frontend assessment",
+      "summary": "Strong architecture, realtime, performance, state/data ownership, and system-design reasoning; JavaScript exact semantics identified as the main interview risk.",
+      "source": "evidence/2026-09-04-initial-assessment.md"
+    },
+    {
+      "date": "2026-09-04",
+      "type": "interview-evidence",
+      "title": "Real interview gaps",
+      "summary": "Raised priority for React design patterns, design principles, browser platform APIs, Service Worker caching, GraphQL/API trade-offs, and advanced TypeScript.",
+      "source": "evidence/2026-09-04-real-interview-gaps.md"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-09-04",
+      "label": "Initial assessment",
+      "levels": {
+        "frontend-architecture": 4,
+        "realtime-websocket": 4,
+        "state-management": 4,
+        "frontend-system-design": 4,
+        "performance": 4,
+        "react-practical": 3,
+        "react-internals": 2.5,
+        "browser-internals": 3,
+        "typescript": 3.5,
+        "security": 3,
+        "accessibility": 3,
+        "testing": 1.5,
+        "nextjs": 2.5,
+        "javascript": 2,
+        "backend-concurrency": 2.5
+      }
+    }
+  ]
+}
