@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "date": "2026-09-04",
+      "type": "assessment",
+      "title": "Initial frontend assessment",
+      "detail": "Architecture, realtime, state ownership and performance emerged as strong areas; exact JavaScript semantics became the highest interview risk."
+    },
+    {
+      "date": "2026-09-04",
+      "type": "evidence",
+      "title": "Real interview gaps recorded",
+      "detail": "Compound Components, Context vs store, GRASP, coupling/cohesion, browser cross-tab APIs, Service Worker caching, GraphQL trade-offs and advanced TypeScript were promoted in priority."
+    },
+    {
+      "date": "2026-09-05",
+      "type": "roadmap",
+      "title": "One-week interview sprint active",
+      "detail": "Days 1–3 focus on breadth; Days 4–6 on depth and reasoning; Day 7 is a no-hint mock interview."
+    },
+    {
+      "date": "2026-09-05",
+      "type": "milestone",
+      "title": "Progress dashboard architecture selected",
+      "detail": "Astro + TypeScript selected for the GitHub Pages dashboard. This infrastructure milestone does not change proficiency."
+    }
+  ]
+}
