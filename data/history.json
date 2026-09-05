@@ -1,0 +1,22 @@
+{
+  "snapshots": [
+    {
+      "date": "2026-09-04",
+      "scores": {
+        "javascript": 2,
+        "react": 2.5,
+        "typescript": 3,
+        "browser": 2.5,
+        "architecture": 4,
+        "realtime": 4,
+        "performance": 4,
+        "design-principles": 1.5,
+        "testing": 1.5,
+        "nextjs": 2.5,
+        "api-design": 1.5,
+        "security": 3,
+        "accessibility": 3
+      }
+    }
+  ]
+}
