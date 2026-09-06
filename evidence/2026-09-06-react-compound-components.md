@@ -18,7 +18,10 @@ The user independently demonstrated the following without hints:
 - proposed splitting focus-related and active-tab Contexts based on different consumers and update frequency,
 - identified the ownership and multiple-instance problems of placing reusable Tabs state in a singleton external store,
 - explained that state should remain local to the Tabs feature unless finer-grained subscriptions justify a scoped external store,
-- identified URL state as an external source of truth and proposed keeping URL concerns in the consumer via the controlled API rather than coupling the reusable Tabs implementation to routing.
+- identified URL state as an external source of truth and proposed keeping URL concerns in the consumer via the controlled API rather than coupling the reusable Tabs implementation to routing,
+- independently identified controlled and uncontrolled modes as mutually exclusive API contracts,
+- proposed enforcing that contract at compile time with a TypeScript discriminated-union-style API,
+- correctly chose controlled `value` semantics over `defaultValue` when both are supplied at runtime.
 
 ## Corrections / unstable details
 
@@ -26,6 +29,8 @@ The user independently demonstrated the following without hints:
 - Initially suggested `React.memo` as relevant to avoiding Context-driven rerenders; reinforced that Context updates bypass prop-only memoization when the consumed value changes.
 - For URL-backed tabs, initially suggested lazy-initializing local state from the URL. This preserves refresh state but is insufficient for browser Back/Forward unless URL changes are subscribed to; controlled mode with URL/router state as the source of truth is the cleaner model.
 - Reinforced that external store does not necessarily mean global singleton state; a per-instance scoped store can preserve ownership and encapsulation.
+- Controlled-mode detection should be based on whether `value` is controlled, not on the presence of `onValueChange`; uncontrolled components may still expose `onValueChange` as a notification callback.
+- `defaultValue` is only the initial value for uncontrolled mode; later changes to `defaultValue` should not become a second source of truth.
 
 ## Assessment
 
@@ -41,8 +46,14 @@ Evidence includes independent trade-off reasoning across composition, ownership,
 
 The user reasons well about subscription boundaries, but exact rerender/memoization semantics required correction and should be retested later without hints.
 
+### Controlled/uncontrolled component APIs
+
+**3-4 — APPLY/REASON**
+
+The user independently reasoned about mutually exclusive API contracts, compile-time prevention, runtime precedence, and external ownership. Switching modes across renders and exact controlled-mode detection still need verification.
+
 ## Next verification
 
 - Spaced retest: Compound Components vs Render Props / prop-heavy APIs without prompting.
-- Controlled/uncontrolled failure modes, including switching modes and external source-of-truth synchronization.
+- Controlled/uncontrolled mode switching across renders and exact detection semantics.
 - Context/store rendering semantics under nested-provider and selector scenarios.
