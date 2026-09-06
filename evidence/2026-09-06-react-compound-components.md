@@ -22,7 +22,9 @@ The user independently demonstrated the following without hints:
 - independently identified controlled and uncontrolled modes as mutually exclusive API contracts,
 - proposed enforcing that contract at compile time with a TypeScript discriminated-union-style API,
 - correctly chose controlled `value` semantics over `defaultValue` when both are supplied at runtime,
-- compared prop-heavy APIs and Compound Components in terms of markup ownership, flexibility, component control, and coupling.
+- compared prop-heavy APIs and Compound Components in terms of markup ownership, flexibility, component control, and coupling,
+- after reinforcement of the Render Props mental model, independently preferred a custom hook when the reusable abstraction is behavior/state with fully consumer-owned markup,
+- correctly identified that both custom hooks and Render Props can preserve consumer control over composition, while a Render Props solution requires a component boundary and a custom hook does not.
 
 ## Corrections / unstable details
 
@@ -33,6 +35,9 @@ The user independently demonstrated the following without hints:
 - Controlled-mode detection should be based on whether `value` is controlled, not on the presence of `onValueChange`; uncontrolled components may still expose `onValueChange` as a notification callback.
 - `defaultValue` is only the initial value for uncontrolled mode; later changes to `defaultValue` should not become a second source of truth.
 - Render Props mental model was incomplete: it is primarily a mechanism for sharing behavior/state while giving the consumer control over rendering through a function, not mainly a wrapper for telemetry or incidental side effects.
+- Custom hooks are not inherently more testable because they can be mocked; prefer testing behavior directly. Hook and render-prop APIs can both be tested effectively.
+- Discoverability is not categorically better for hooks: both typed hook returns and typed render-prop arguments can provide IDE discovery. The stronger modern advantage of hooks is API ergonomics and composition with other hooks.
+- Lifecycle ownership needs retesting: hook state/effects attach to the calling component's lifecycle, while a Render Props abstraction creates its own component/state lifecycle boundary.
 
 ## Assessment
 
@@ -54,14 +59,15 @@ The user reasons well about subscription boundaries, but exact rerender/memoizat
 
 The user independently reasoned about mutually exclusive API contracts, compile-time prevention, runtime precedence, and external ownership. Switching modes across renders and exact controlled-mode detection still need verification.
 
-### Render Props
+### Render Props / custom hooks
 
-**2-3 — EXPLAIN/APPLY developing**
+**3 — APPLY, developing REASON**
 
-The user understands that Render Props can give consumers rendering freedom, but the core behavior-sharing/data-exposure model and its trade-offs need reinforcement and retesting.
+After reinforcement, the user correctly identified custom hooks as the more natural modern abstraction when behavior/state is reusable and rendering is fully consumer-owned. Exact lifecycle-boundary, discoverability, and testing trade-offs still need spaced retesting.
 
 ## Next verification
 
-- Retest Compound Components vs Render Props / prop-heavy APIs after reinforcing the Render Props mental model.
+- Spaced retest of Compound Components vs Render Props vs custom hooks without prompting.
 - Controlled/uncontrolled mode switching across renders and exact detection semantics.
 - Context/store rendering semantics under nested-provider and selector scenarios.
+- Lifecycle ownership differences between hook-based and component-boundary abstractions.
