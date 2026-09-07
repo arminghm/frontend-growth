@@ -6,6 +6,20 @@
 
 The end-of-week session is a mock interview with an experienced Frontend Chapter Lead. Treat it as a high-value external assessment and optimize the week to expose and repair interview weaknesses.
 
+## Active topic
+
+**Design Principles & Patterns**
+
+React study is temporarily paused. Continue the sprint with the next highest-priority interview gap:
+
+1. coupling vs cohesion,
+2. GRASP and responsibility assignment,
+3. applied SOLID in frontend/React architecture,
+4. Strategy / Factory / State comparisons,
+5. Open/Closed Principle and extension-point trade-offs.
+
+Keep JavaScript semantics as a parallel diagnostic track rather than the primary teaching topic for now.
+
 ## Sprint cadence
 
 ### Days 1–3 — Breadth and high-frequency interview coverage
@@ -66,4 +80,4 @@ Run a mixed Senior Frontend mock without hints. Use it to identify the final rem
 
 ## Next action
 
-Start Days 1–3 breadth coverage with React patterns and design principles, while keeping a parallel JavaScript diagnostic track. Use recent real-interview questions as the primary examples.
+Start Design Principles & Patterns with coupling/cohesion, then move through GRASP, applied SOLID, pattern comparison, and OCP trade-offs. Keep React paused until this block is complete or interview priorities change.
