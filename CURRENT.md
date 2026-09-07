@@ -18,6 +18,14 @@ React study is temporarily paused. Continue the sprint with the next highest-pri
 4. Strategy / Factory / State comparisons,
 5. Open/Closed Principle and extension-point trade-offs.
 
+Teaching constraints for this block:
+
+- use frontend-specific examples and scenarios,
+- prioritize patterns that remain useful in modern frontend architecture,
+- for each pattern, distinguish intended use from misuse, over-engineering, and anti-pattern forms,
+- explain why a pattern or implementation becomes an anti-pattern in a given frontend context instead of labeling it mechanically,
+- start from the problem and trade-offs rather than from pattern names.
+
 Keep JavaScript semantics as a parallel diagnostic track rather than the primary teaching topic for now.
 
 ## Sprint cadence
