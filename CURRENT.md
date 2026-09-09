@@ -10,13 +10,12 @@ The end-of-week session is a mock interview with an experienced Frontend Chapter
 
 **Design Principles & Patterns**
 
-React study is temporarily paused. Continue the sprint with the next highest-priority interview gap:
+React study is temporarily paused. Coupling/cohesion and introductory GRASP responsibility assignment have now been applied successfully in frontend scenarios. Continue with:
 
-1. coupling vs cohesion,
-2. GRASP and responsibility assignment,
-3. applied SOLID in frontend/React architecture,
-4. Strategy / Factory / State comparisons,
-5. Open/Closed Principle and extension-point trade-offs.
+1. applied SOLID in frontend/React architecture,
+2. Strategy / Factory / State comparisons,
+3. Open/Closed Principle and extension-point trade-offs,
+4. later spaced retest of GRASP abstraction thresholds and responsibility ownership.
 
 Teaching constraints for this block:
 
@@ -66,10 +65,9 @@ Run a mixed Senior Frontend mock without hints. Use it to identify the final rem
 
 ## Must-fix interview gaps
 
-- Compound Components and practical React patterns,
-- Context vs external/global stores,
-- coupling/cohesion and GRASP,
 - applied SOLID and design-pattern trade-offs,
+- Factory vs Strategy vs State and OCP extension-point reasoning,
+- GRASP responsibility assignment under fresh scenarios,
 - browser cross-tab communication APIs,
 - Service Worker caching strategies,
 - advanced TypeScript (`infer`, `satisfies`, conditional types, `unknown`/`any`/`never`, generics),
@@ -79,6 +77,8 @@ Run a mixed Senior Frontend mock without hints. Use it to identify the final rem
 ## Recently demonstrated strengths
 
 - frontend architecture and state ownership,
+- coupling/cohesion analysis in realistic UI flows,
+- frontend responsibility assignment and boundary reasoning,
 - realtime/WebSocket system design,
 - snapshot + delta reasoning,
 - failure recovery and degraded mode,
@@ -88,4 +88,4 @@ Run a mixed Senior Frontend mock without hints. Use it to identify the final rem
 
 ## Next action
 
-Start Design Principles & Patterns with coupling/cohesion, then move through GRASP, applied SOLID, pattern comparison, and OCP trade-offs. Keep React paused until this block is complete or interview priorities change.
+Start Applied SOLID from concrete frontend failure modes. Keep GRASP as a later spaced retest rather than continuing with more definitions now.
