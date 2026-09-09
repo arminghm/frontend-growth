@@ -2,13 +2,13 @@
 
 ## Current level
 
-**1-2 — AWARE/EXPLAIN (inconsistent under interview pressure)**
+**2-3 — EXPLAIN/APPLY (developing)**
 
 ## Current gaps
 
-- coupling vs cohesion,
-- high cohesion / low coupling as design goals,
-- GRASP principles and how they guide responsibility assignment,
+- coupling vs cohesion trade-offs need spaced retesting,
+- GRASP responsibility assignment needs more precision around Information Expert vs orchestration,
+- deciding when indirection/protected variation is justified versus speculative abstraction,
 - SOLID beyond definitions: practical trade-offs and code/design examples,
 - Factory, Strategy, State, Observer, Adapter, Facade, Command, Mediator, Composite and related trade-offs,
 - Open/Closed Principle in relation to factories, strategies, registries, and extension points,
@@ -28,12 +28,14 @@
 - GRASP was unknown in a recent real interview.
 - SOLID knowledge was not sufficiently deep/applied.
 - Factory vs OCP produced uncertainty and needs precise treatment.
+- 2026-09-10: independently identified responsibility leakage and knowledge coupling in profile/search scenarios, proposed UI contracts and DTO mapping boundaries, and applied Information Expert / Controller / Protected Variations reasoning. Exact abstraction thresholds and responsibility ownership still need retesting.
 
 ## Next verification
 
-1. explain coupling/cohesion with frontend examples,
-2. GRASP overview with applied responsibility-assignment questions,
-3. SOLID applied to React/frontend architecture,
-4. compare Factory vs Strategy vs State in concrete frontend scenarios,
-5. identify when pattern use becomes misuse or an anti-pattern,
-6. answer OCP trade-off questions without relying on slogans.
+1. spaced retest coupling/cohesion without hints,
+2. distinguish Information Expert from feature orchestration in a fresh scenario,
+3. decide when external dependencies merit indirection versus direct use,
+4. SOLID applied to React/frontend architecture,
+5. compare Factory vs Strategy vs State in concrete frontend scenarios,
+6. identify when pattern use becomes misuse or an anti-pattern,
+7. answer OCP trade-off questions without relying on slogans.
