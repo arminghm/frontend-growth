@@ -1,10 +1,10 @@
-# OCP, Strategy, Factory, State, Adapter, Facade & Observer — Applied Evidence
+# OCP, Strategy, Factory, State, Adapter, Facade, Observer & Command — Applied Evidence
 
 Date: 2026-09-13
 
 ## Context
 
-Applied analysis of analytics provider extension, file-upload Strategy/Factory/State composition, a map-service Adapter boundary around Mapbox, a profile-avatar Facade workflow, and login workflow decomposition into explicit core steps versus secondary Observer reactions.
+Applied analysis of analytics provider extension, file-upload Strategy/Factory/State composition, a map-service Adapter boundary around Mapbox, a profile-avatar Facade workflow, login workflow decomposition into explicit core steps versus secondary Observer reactions, and command-based admin actions reused across row menus, bulk actions, and a command palette.
 
 ## Independent evidence
 
@@ -34,7 +34,12 @@ The user independently demonstrated the following:
 - correctly identified ordering constraints: authenticated WebSocket startup may depend on token availability, so hiding both behind independent `user.loggedIn` subscribers would create a race/implicit temporal dependency,
 - correctly classified analytics as a secondary reaction whose failure should not fail login,
 - correctly recognized that an event bus does not remove coupling when consumers depend on the semantic event contract; it can merely make dependencies less visible and harder to trace,
-- correctly chose Observer only for independent secondary reactions while keeping critical workflow dependencies explicit.
+- correctly chose Observer only for independent secondary reactions while keeping critical workflow dependencies explicit,
+- correctly identified the admin action scenario as a good Command candidate because the same executable intents must be triggered from multiple surfaces and carry metadata/capabilities,
+- correctly described a Command as representing an executable intent rather than merely a callback, and distinguished `SuspendUserCommand` (intent/request) from `user.suspended` (fact/event),
+- correctly placed analytics outside the essential Command behavior, suggesting an orchestrator/decorator so cross-cutting analytics can wrap execution rather than pollute each command,
+- correctly recognized that bulk execution can treat commands as data/executable units and execute a collection sequentially or independently,
+- correctly identified over-engineering risk if simple local UI interactions are mechanically converted into command objects.
 
 ## Corrections / refinements
 
@@ -50,6 +55,9 @@ The user independently demonstrated the following:
 - A Facade becomes a God object when unrelated workflows accumulate behind it, its dependency surface expands across unrelated features, or many independent reasons to change converge in one central service.
 - Notification badge refresh is context-dependent: it is secondary if stale badge data is temporarily acceptable, but may be part of required dashboard initialization if the product contract requires it before the post-login screen is considered ready.
 - Observer is a poor fit for steps with required ordering, required success, or data dependencies between consumers; those should remain explicit orchestration.
+- A frontend `canExecute()`/permission check is useful for capability/UX decisions but must not be treated as the security boundary; authorization must still be enforced by the backend or trusted authority.
+- Pre-execution confirmation (for example "Are you sure you want to delete this user?") is usually a UI/invoker concern. Post-execution verification/acknowledgement is part of command completion semantics or the underlying use case and should not be conflated with UI confirmation.
+- Bulk command execution needs explicit failure and ordering semantics: fail-fast vs continue, sequential vs parallel, retry/rollback behavior, and whether partial success is acceptable.
 - The design would need reconsideration if multiple providers must run simultaneously, implementations become dynamically pluggable after startup, different features require different providers, capabilities diverge beyond the shared contract, or provider-specific semantics leak upward.
 
 ## Assessment
@@ -84,6 +92,12 @@ The user independently separated UI feedback from subsystem orchestration, ident
 
 The user independently separated critical ordered login steps from independent secondary reactions, identified hidden semantic and temporal coupling introduced by a global event bus, and correctly reasoned about failure isolation. Further verification should cover event ordering, unsubscribe/lifecycle concerns, and Observer vs explicit store/state communication.
 
+### Command
+
+**3 — APPLY (developing REASON)**
+
+The user independently recognized when executable intents deserve first-class representation, distinguished Command from Event, placed cross-cutting analytics outside core command behavior, and identified reuse across invokers/bulk execution as meaningful value. Refinement is needed around UI confirmation versus command completion semantics, client-side permission checks versus real authorization, and bulk failure/ordering policies.
+
 ## Next verification
 
 - Spaced retest Strategy/Factory/State without pattern-name cues.
@@ -93,4 +107,5 @@ The user independently separated critical ordered login steps from independent s
 - Test when direct third-party API use is simpler than introducing an Adapter.
 - Retest Facade vs orchestration/service boundaries, including cache and UI-side effects.
 - Retest Observer against store/state communication and ordering/lifecycle failures.
-- Continue with Command, prioritizing modern frontend use cases and misuse trade-offs.
+- Retest Command against callback/action/event designs and bulk execution semantics.
+- Continue with remaining high-value frontend patterns only where they provide distinct architectural value.
