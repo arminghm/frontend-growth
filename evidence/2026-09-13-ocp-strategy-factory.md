@@ -1,10 +1,10 @@
-# OCP, Strategy, Factory, State, Adapter & Facade — Applied Evidence
+# OCP, Strategy, Factory, State, Adapter, Facade & Observer — Applied Evidence
 
 Date: 2026-09-13
 
 ## Context
 
-Applied analysis of analytics provider extension, file-upload Strategy/Factory/State composition, a map-service Adapter boundary around Mapbox, and a profile-avatar update workflow involving compression, upload, cache invalidation, analytics, and UI feedback.
+Applied analysis of analytics provider extension, file-upload Strategy/Factory/State composition, a map-service Adapter boundary around Mapbox, a profile-avatar Facade workflow, and login workflow decomposition into explicit core steps versus secondary Observer reactions.
 
 ## Independent evidence
 
@@ -29,7 +29,12 @@ The user independently demonstrated the following:
 - identified the presigned-upload sequence (`create upload -> PUT binary -> confirm upload`) as a smaller coherent subsystem that can be hidden behind an upload abstraction,
 - correctly reasoned that changing from presigned URL upload to a direct SDK should affect the upload boundary/implementation rather than the higher-level avatar-update workflow,
 - correctly kept analytics behind its own abstraction and recognized backend DTO/response translation as Adapter responsibility at the API boundary,
-- correctly proposed that compression, upload orchestration, analytics, and cache synchronization can form a higher-level avatar-update façade/orchestrator when the consumer should express only the intent to update the avatar.
+- correctly proposed that compression, upload orchestration, analytics, and cache synchronization can form a higher-level avatar-update façade/orchestrator when the consumer should express only the intent to update the avatar,
+- correctly classified access-token persistence, current-user loading, routing, and authenticated WebSocket startup as explicit core login workflow steps rather than Observer reactions,
+- correctly identified ordering constraints: authenticated WebSocket startup may depend on token availability, so hiding both behind independent `user.loggedIn` subscribers would create a race/implicit temporal dependency,
+- correctly classified analytics as a secondary reaction whose failure should not fail login,
+- correctly recognized that an event bus does not remove coupling when consumers depend on the semantic event contract; it can merely make dependencies less visible and harder to trace,
+- correctly chose Observer only for independent secondary reactions while keeping critical workflow dependencies explicit.
 
 ## Corrections / refinements
 
@@ -43,6 +48,8 @@ The user independently demonstrated the following:
 - Merely moving the existing `updateAvatar` lines into another function/class called `AvatarFacade` is code movement, not necessarily a meaningful Facade. A Facade adds value when it removes subsystem knowledge from the consumer and exposes a smaller, cohesive intent-level API.
 - `queryClient.invalidateQueries()` can reasonably live inside an application-level avatar-update Facade if cache consistency is part of completing the use case, but this couples the Facade to TanStack Query. If the boundary must remain framework/cache-library independent, cache synchronization should sit outside or behind a narrower cache/update port.
 - A Facade becomes a God object when unrelated workflows accumulate behind it, its dependency surface expands across unrelated features, or many independent reasons to change converge in one central service.
+- Notification badge refresh is context-dependent: it is secondary if stale badge data is temporarily acceptable, but may be part of required dashboard initialization if the product contract requires it before the post-login screen is considered ready.
+- Observer is a poor fit for steps with required ordering, required success, or data dependencies between consumers; those should remain explicit orchestration.
 - The design would need reconsideration if multiple providers must run simultaneously, implementations become dynamically pluggable after startup, different features require different providers, capabilities diverge beyond the shared contract, or provider-specific semantics leak upward.
 
 ## Assessment
@@ -71,6 +78,12 @@ The user independently identified meaningful third-party translation boundaries,
 
 The user independently separated UI feedback from subsystem orchestration, identified a coherent upload subsystem, and reasoned about preserving the higher-level avatar-update workflow across upload-provider changes. The main refinement is distinguishing a true Facade boundary from merely relocating the same implementation and deciding whether cache-library details belong inside the application-level facade.
 
+### Observer
+
+**3-4 — APPLY/REASON (developing)**
+
+The user independently separated critical ordered login steps from independent secondary reactions, identified hidden semantic and temporal coupling introduced by a global event bus, and correctly reasoned about failure isolation. Further verification should cover event ordering, unsubscribe/lifecycle concerns, and Observer vs explicit store/state communication.
+
 ## Next verification
 
 - Spaced retest Strategy/Factory/State without pattern-name cues.
@@ -79,4 +92,5 @@ The user independently separated UI feedback from subsystem orchestration, ident
 - Compare Adapter vs Facade on fresh frontend scenarios.
 - Test when direct third-party API use is simpler than introducing an Adapter.
 - Retest Facade vs orchestration/service boundaries, including cache and UI-side effects.
-- Continue with Observer and Command, prioritizing modern frontend use cases and misuse trade-offs.
+- Retest Observer against store/state communication and ordering/lifecycle failures.
+- Continue with Command, prioritizing modern frontend use cases and misuse trade-offs.
