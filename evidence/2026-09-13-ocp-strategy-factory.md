@@ -1,10 +1,10 @@
-# OCP, Strategy, Factory, State, Adapter, Facade, Observer & Command — Applied Evidence
+# OCP, Strategy, Factory, State, Adapter, Facade, Observer, Command, Mediator & Composite — Applied Evidence
 
 Date: 2026-09-13
 
 ## Context
 
-Applied analysis of analytics provider extension, file-upload Strategy/Factory/State composition, a map-service Adapter boundary around Mapbox, a profile-avatar Facade workflow, login workflow decomposition into explicit core steps versus secondary Observer reactions, and command-based admin actions reused across row menus, bulk actions, and a command palette.
+Applied analysis of analytics provider extension, file-upload Strategy/Factory/State composition, a map-service Adapter boundary around Mapbox, a profile-avatar Facade workflow, login workflow decomposition into explicit core steps versus secondary Observer reactions, command-based admin actions reused across multiple invokers, and a dashboard-builder scenario combining recursive layout structure with coordinated resize behavior.
 
 ## Independent evidence
 
@@ -39,7 +39,10 @@ The user independently demonstrated the following:
 - correctly described a Command as representing an executable intent rather than merely a callback, and distinguished `SuspendUserCommand` (intent/request) from `user.suspended` (fact/event),
 - correctly placed analytics outside the essential Command behavior, suggesting an orchestrator/decorator so cross-cutting analytics can wrap execution rather than pollute each command,
 - correctly recognized that bulk execution can treat commands as data/executable units and execute a collection sequentially or independently,
-- correctly identified over-engineering risk if simple local UI interactions are mechanically converted into command objects.
+- correctly identified over-engineering risk if simple local UI interactions are mechanically converted into command objects,
+- correctly identified a recursive dashboard layout (`Dashboard -> Row -> Column -> widgets`) as a Composite-style whole/part structure rather than treating any array/nesting as Composite,
+- correctly chose Mediator-style coordination for widget resize because layout recalculation, neighbor resizing, grid constraints, and autosave have coordination/ordering relationships that should not be distributed as direct sibling-component communication,
+- correctly recognized that analytics around resize is context-dependent and can remain separate when it is merely a secondary observation rather than part of successful resize semantics.
 
 ## Corrections / refinements
 
@@ -56,8 +59,10 @@ The user independently demonstrated the following:
 - Notification badge refresh is context-dependent: it is secondary if stale badge data is temporarily acceptable, but may be part of required dashboard initialization if the product contract requires it before the post-login screen is considered ready.
 - Observer is a poor fit for steps with required ordering, required success, or data dependencies between consumers; those should remain explicit orchestration.
 - A frontend `canExecute()`/permission check is useful for capability/UX decisions but must not be treated as the security boundary; authorization must still be enforced by the backend or trusted authority.
-- Pre-execution confirmation (for example "Are you sure you want to delete this user?") is usually a UI/invoker concern. Post-execution verification/acknowledgement is part of command completion semantics or the underlying use case and should not be conflated with UI confirmation.
+- Pre-execution confirmation is usually a UI/invoker concern. Post-execution verification/acknowledgement is part of command completion semantics or the underlying use case and should not be conflated with UI confirmation.
 - Bulk command execution needs explicit failure and ordering semantics: fail-fast vs continue, sequential vs parallel, retry/rollback behavior, and whether partial success is acceptable.
+- In Mediator scenarios, analytics should not automatically be folded into the mediator. If analytics is only a secondary reaction to a successful resize, keeping it outside the core coordination policy preserves mediator cohesion; if measurement is part of the resize use-case contract, including it can be justified.
+- Composite requires a meaningful recursive whole/part structure with reasonably uniform treatment; simple arrays or ordinary nested JSX are not sufficient evidence by themselves.
 - The design would need reconsideration if multiple providers must run simultaneously, implementations become dynamically pluggable after startup, different features require different providers, capabilities diverge beyond the shared contract, or provider-specific semantics leak upward.
 
 ## Assessment
@@ -98,14 +103,26 @@ The user independently separated critical ordered login steps from independent s
 
 The user independently recognized when executable intents deserve first-class representation, distinguished Command from Event, placed cross-cutting analytics outside core command behavior, and identified reuse across invokers/bulk execution as meaningful value. Refinement is needed around UI confirmation versus command completion semantics, client-side permission checks versus real authorization, and bulk failure/ordering policies.
 
+### Mediator
+
+**3 — APPLY**
+
+The user independently recognized coordination-heavy sibling interactions as a mediator problem and preferred a centralized coordination boundary over direct component-to-component coupling. Further retesting should distinguish Mediator from state ownership/store patterns when no explicit coordination policy is needed.
+
+### Composite
+
+**3 — APPLY**
+
+The user correctly identified a recursive dashboard layout as a whole/part tree suitable for Composite-style modeling. Further verification should ensure the pattern is not over-applied to ordinary collections or incidental component nesting.
+
 ## Next verification
 
 - Spaced retest Strategy/Factory/State without pattern-name cues.
-- Retest when a simple startup switch should remain local versus become a Factory/registry.
-- Test OCP under multiple simultaneous providers and capability divergence.
-- Compare Adapter vs Facade on fresh frontend scenarios.
-- Test when direct third-party API use is simpler than introducing an Adapter.
-- Retest Facade vs orchestration/service boundaries, including cache and UI-side effects.
+- Spaced retest coupling/cohesion and GRASP responsibility assignment without hints.
+- Retest SRP/DIP/ISP/LSP trade-offs under fresh scenarios, especially LSP postconditions and DIP abstraction thresholds.
+- Test OCP under dynamic registration, multiple simultaneous implementations, and capability divergence.
+- Compare Adapter vs Facade on fresh scenarios and test when direct third-party use is simpler.
 - Retest Observer against store/state communication and ordering/lifecycle failures.
 - Retest Command against callback/action/event designs and bulk execution semantics.
-- Continue with remaining high-value frontend patterns only where they provide distinct architectural value.
+- Retest Mediator against shared state ownership and ordinary orchestration.
+- Retest Composite against simple nested UI and non-recursive collections.
