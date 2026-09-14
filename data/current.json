@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-09-05",
-  "currentFocus": "One-week Senior Frontend interview sprint",
+  "updatedAt": "2026-09-13",
+  "currentFocus": "Design Principles & Patterns — first pass complete; spaced retest",
   "scale": [
     { "score": 0, "label": "UNKNOWN" },
     { "score": 1, "label": "AWARE" },
@@ -117,15 +117,15 @@
     {
       "id": "design-principles",
       "name": "Design Principles",
-      "score": 1.5,
-      "status": "gap",
-      "summary": "Formal principles and applied pattern reasoning are current interview gaps.",
+      "score": 3,
+      "status": "good",
+      "summary": "Applied frontend design-principle and pattern reasoning reached APPLY; spaced retesting is now the priority.",
       "subskills": [
-        { "id": "coupling-cohesion", "name": "Coupling / Cohesion", "score": 1, "status": "gap" },
-        { "id": "grasp", "name": "GRASP", "score": 0, "status": "gap" },
-        { "id": "solid", "name": "SOLID", "score": 2, "status": "developing" },
-        { "id": "strategy", "name": "Strategy", "score": 2, "status": "developing" },
-        { "id": "factory-ocp", "name": "Factory / OCP", "score": 1, "status": "gap" }
+        { "id": "coupling-cohesion", "name": "Coupling / Cohesion", "score": 3, "status": "good" },
+        { "id": "grasp", "name": "GRASP", "score": 3, "status": "good" },
+        { "id": "solid", "name": "SOLID", "score": 3, "status": "good" },
+        { "id": "strategy", "name": "Strategy", "score": 3, "status": "good" },
+        { "id": "factory-ocp", "name": "Factory / OCP", "score": 3, "status": "good" }
       ]
     },
     {
