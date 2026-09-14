@@ -13,7 +13,7 @@ This repository tracks:
 - future verification targets,
 - progress over time.
 
-It is not a notebook of everything studied. Learning material can live in ChatGPT conversations; this repository records durable conclusions and evidence.
+It is not a notebook of everything studied. The deliberate exception is `notes/`, which contains study and review material for revisiting learned topics. The rest of the repository records durable conclusions, assessment state, roadmap, and evidence.
 
 ## Start here
 
@@ -23,6 +23,7 @@ It is not a notebook of everything studied. Learning material can live in ChatGP
 4. `maps/frontend.md` — one-glance skill map.
 5. `skills/` — domain-specific assessments.
 6. `evidence/` — dated evidence supporting changes.
+7. `notes/` — study/review material; not evidence of mastery by itself.
 
 ## Working model
 
