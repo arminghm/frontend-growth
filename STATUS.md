@@ -13,6 +13,7 @@ Assessment scale is defined in `AGENTS.md`.
 | React Internals | 2-3 | Developing: Fiber, effect ordering, lifecycle details, Context nuances recently reinforced |
 | Browser Internals | 3 | Good event-loop/rendering model; some edge cases still need retesting |
 | TypeScript | 3-4 | Good unions, narrowing, generics, exhaustiveness, utility types |
+| Design Principles & Patterns | 3 | Applied frontend reasoning now demonstrated; spaced retesting needed to stabilize REASON-level trade-off depth |
 | Security | 3 | Good conceptual model of XSS, CSRF, CSP, cookies, iframe/clickjacking |
 | Accessibility | 3 | Good conceptual knowledge of semantics, forms, modal/focus behavior |
 | Testing | 1-2 | Conceptual understanding improved; practical experience remains limited |
@@ -25,9 +26,11 @@ Assessment scale is defined in `AGENTS.md`.
 - Applied engineering reasoning is stronger than trivia recall.
 - Strong at choosing solutions based on ownership, source of truth, failure modes, and measured bottlenecks.
 - Strongest interview territory: architecture, realtime systems, performance, state/data design.
+- Design Principles & Patterns now show applied frontend reasoning across responsibility assignment, SOLID, OCP, Strategy/Factory/State, Adapter/Facade, Observer/Command, Mediator, and Composite.
 
 ## Current risks
 
 - Exact JavaScript semantics can underrepresent overall engineering level in interviews.
 - Recently corrected topics need spaced retesting before being considered stable.
+- Design-principle/pattern knowledge should be retested without pattern-name cues to verify transfer under pressure.
 - Testing needs implementation practice rather than more theory alone.
