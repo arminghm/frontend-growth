@@ -23,6 +23,18 @@
       "type": "milestone",
       "title": "Progress dashboard architecture selected",
       "detail": "Astro + TypeScript selected for the GitHub Pages dashboard. This infrastructure milestone does not change proficiency."
+    },
+    {
+      "date": "2026-09-10",
+      "type": "evidence",
+      "title": "Applied design-principle reasoning demonstrated",
+      "detail": "Independent frontend scenarios showed stronger coupling/cohesion, GRASP responsibility assignment, and applied SOLID reasoning."
+    },
+    {
+      "date": "2026-09-13",
+      "type": "assessment",
+      "title": "Design Principles advanced to APPLY",
+      "detail": "Independent Strategy/Factory/State, OCP, Adapter/Facade, Observer/Command, Mediator, and Composite reasoning supported moving Design Principles & Patterns to level 3, with spaced retesting still required."
     }
   ]
 }
