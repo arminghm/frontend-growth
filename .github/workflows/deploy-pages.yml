@@ -10,10 +10,6 @@ on:
       - '.github/workflows/deploy-pages.yml'
   push:
     branches: [main]
-    paths:
-      - 'dashboard/**'
-      - 'data/**'
-      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 permissions:
