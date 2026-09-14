@@ -1,8 +1,8 @@
 # Design Principles & Patterns — Full Review Notes
 
-> مرور کامل block مربوط به Design Principles & Patterns برای Senior Frontend interview prep.
+> A complete review of the Design Principles & Patterns block for Senior Frontend interview preparation.
 >
-> هدف این فایل مرور ذهنی، مرور قبل از مصاحبه، و تثبیت تفاوت بین principleها، patternها، responsibilityها، trade-offها و failure modeهاست.
+> The goal of this file is to support revision, pre-interview review, and precise differentiation between principles, patterns, responsibilities, trade-offs, and failure modes.
 
 ---
 
@@ -38,48 +38,48 @@
 
 ### Cohesion
 
-`Cohesion` یعنی responsibilityهای داخل یک boundary چقدر به یک هدف یا concept مشترک تعلق دارند.
+`Cohesion` describes how strongly the responsibilities inside a boundary belong to the same purpose or concept.
 
-سؤال تشخیصی:
+Diagnostic question:
 
-> چند reason مستقل برای change کردن این boundary وجود دارد؟
+> How many independent reasons are there for this boundary to change?
 
-اگر یک component همزمان:
+If a component simultaneously:
 
-- form state را نگه دارد،
-- validation انجام دهد،
-- token را از `localStorage` بخواند،
-- HTTP request بزند،
-- backend DTO را بشناسد،
-- global store را sync کند،
-- analytics بفرستد،
-- toast نشان دهد،
+- owns form state,
+- performs validation,
+- reads a token from `localStorage`,
+- performs an HTTP request,
+- knows the backend DTO,
+- synchronizes a global store,
+- sends analytics,
+- shows a toast,
 
-احتمالاً cohesion پایین آمده است.
+then its cohesion has probably dropped.
 
 ### Coupling
 
-`Coupling` یعنی یک boundary چه مقدار knowledge یا dependency نسبت به boundaryهای دیگر دارد.
+`Coupling` describes how much knowledge or dependency one boundary has about other boundaries.
 
-سؤال تشخیصی:
+Diagnostic question:
 
-> این بخش چه چیزهایی را می‌داند که ideally لازم نیست بداند؟
+> What does this part know that it ideally should not need to know?
 
-Coupling فقط import نیست. می‌تواند شامل این‌ها باشد:
+Coupling is not just about imports. It can include:
 
 - API shape
-- backend DTO
+- backend DTOs
 - store shape
-- `localStorage` key convention
-- external provider API
+- `localStorage` key conventions
+- external provider APIs
 - temporal ordering
-- component contract
-- event name
-- runtime protocol
+- component contracts
+- event names
+- runtime protocols
 
-## هدف واقعی
+## The actual goal
 
-هدف:
+The goal is:
 
 ```text
 High cohesion
@@ -87,13 +87,13 @@ High cohesion
 Appropriate / low accidental coupling
 ```
 
-هدف **zero coupling** نیست.
+The goal is **not zero coupling**.
 
-یک boundary باید به چیزهایی که واقعاً برای responsibility خودش نیاز دارد coupled باشد.
+A boundary should still be coupled to what it genuinely needs in order to fulfill its responsibility.
 
 ## ProfileForm example
 
-نسخه‌ی مسئله‌دار:
+Problematic version:
 
 ```ts
 async function submitProfile(values: ProfileValues) {
@@ -120,9 +120,9 @@ async function submitProfile(values: ProfileValues) {
 }
 ```
 
-مشکل اصلی این نیست که function طولانی است؛ مشکل این است که responsibilityهای مستقل زیادی در یک boundary جمع شده‌اند.
+The main issue is not that the function is long. The issue is that multiple independent responsibilities have accumulated inside one boundary.
 
-یک design بهتر:
+A better design might expose:
 
 ```ts
 type ProfileFormProps = {
@@ -131,51 +131,51 @@ type ProfileFormProps = {
 };
 ```
 
-`ProfileForm` می‌تواند مسئول این‌ها بماند:
+`ProfileForm` can still cohesively own:
 
 - local form state
 - dirty state
 - field validation
 - submit UX
-- loading / disable state
+- loading / disabled state
 
-ولی نباید لزوماً بداند:
+But it does not necessarily need to know:
 
-- endpoint چیست،
-- auth token کجاست،
-- DTO backend چگونه است،
-- analytics provider چیست.
+- the endpoint,
+- where the auth token lives,
+- the backend DTO shape,
+- which analytics provider is used.
 
 ## Important correction
 
-فقط move کردن code از component به `utils.ts` coupling/responsibility را حل نمی‌کند.
+Simply moving code from a component into `utils.ts` does not fix coupling or responsibility assignment.
 
 ```text
 Move code != improve design
 ```
 
-Boundary جدید باید responsibility معناداری داشته باشد.
+The new boundary needs a meaningful responsibility.
 
 ---
 
 # 2. GRASP & Responsibility Assignment
 
-GRASP را به‌عنوان collectionی از heuristicهای responsibility assignment دیدیم، نه مجموعه‌ی تعریف‌های حفظی.
+We treated GRASP as a collection of responsibility-assignment heuristics rather than a set of definitions to memorize.
 
 ## 2.1 Information Expert
 
-Responsibility را به جایی بده که information لازم برای انجام آن را دارد.
+Assign a responsibility to the part that has the information required to fulfill it.
 
-مثال:
+Examples:
 
-- API adapter expert برای HTTP/DTO concerns است.
-- feature orchestrator expert برای sequence/use-case flow است.
+- an API adapter is the expert for HTTP/DTO concerns,
+- a feature orchestrator is the expert for sequence/use-case flow.
 
-این دو را نباید یکی فرض کرد.
+These are not the same responsibility.
 
 ### Common gap discovered
 
-در ابتدا tendency وجود داشت که `Information Expert` و orchestrator یکی دیده شوند.
+Initially there was a tendency to blur `Information Expert` and orchestration together.
 
 Correction:
 
@@ -187,13 +187,13 @@ Owning workflow coordination
 
 ## 2.2 Controller
 
-در frontend، Controller را به معنای MVC controller محدود نکردیم.
+In frontend architecture, we did not limit Controller to the MVC definition.
 
 Mental model:
 
-> Boundaryای که system event / user intent را می‌گیرد و flow را coordinate می‌کند.
+> A boundary that receives a system event / user intent and coordinates the flow.
 
-مثلاً:
+For example:
 
 ```ts
 function useProductSearch() {
@@ -208,7 +208,7 @@ function useProductSearch() {
 }
 ```
 
-اگر hook خودش flow را انجام می‌دهد:
+If the hook performs the flow itself:
 
 ```text
 Page detects/delegates intent
@@ -217,13 +217,13 @@ Hook/feature action orchestrates
 
 ## 2.3 Low Coupling / High Cohesion
 
-این دو نتیجه‌ی مطلوب responsibility assignment هستند، نه ruleهای مکانیکی برای شکستن همه‌چیز به fileهای کوچک.
+These are desirable outcomes of responsibility assignment, not mechanical rules that require every file to be tiny.
 
 ## 2.4 Indirection
 
-گاهی یک intermediary dependency اضافه می‌کنیم تا دو boundary مستقیماً به هم coupled نباشند.
+Sometimes we introduce an intermediary dependency so two boundaries do not depend directly on one another.
 
-اما indirection هزینه دارد:
+But indirection has a cost:
 
 - more files
 - more interfaces
@@ -231,15 +231,15 @@ Hook/feature action orchestrates
 - testing overhead
 - cognitive overhead
 
-پس سؤال:
+So ask:
 
-> آیا variation واقعی و meaningful است یا فقط speculative است؟
+> Is the variation real and meaningful, or merely speculative?
 
 ## 2.5 Protected Variations
 
-یک variation point واقعی را پشت boundary قرار می‌دهیم تا تغییر آن به stable core leak نکند.
+A real variation point can be hidden behind a boundary so that change does not leak into stable core logic.
 
-مثال‌های معتبر:
+Valid examples:
 
 - third-party analytics provider
 - Mapbox/MapLibre provider
@@ -248,24 +248,24 @@ Hook/feature action orchestrates
 
 ### Important gap discovered
 
-در چند پاسخ اولیه tendency وجود داشت که dependencyای که «شاید یک روز تغییر کند» فوراً abstraction بگیرد.
+In several early answers there was a tendency to abstract any dependency that *might* change someday.
 
 Correction:
 
-Variation باید حداقل یکی از این ویژگی‌ها را داشته باشد:
+Variation should have at least one meaningful justification such as:
 
-- currently different semantic/shape
+- currently different semantics or shape
 - likely/probable variation
 - reused across implementations
-- expensive to change
+- expensive change cost
 - third-party contract leakage
-- meaningful domain boundary
+- a meaningful domain boundary
 
-صرف احتمال آینده کافی نیست.
+Future possibility alone is not enough.
 
 ## ProductSearch GRASP example
 
-مسئله:
+The scenario contained:
 
 - search input/state
 - HTTP fetch
@@ -274,7 +274,7 @@ Variation باید حداقل یکی از این ویژگی‌ها را داشت
 - storage
 - rendering
 
-Responsibility split قابل دفاع:
+A defensible responsibility split is:
 
 ```text
 SearchPage / SearchView
@@ -291,15 +291,15 @@ Persistence
 
 ### DTO correction
 
-Backend response data = DTO.
+Backend response data is the DTO.
 
-Mapping معمولاً:
+Mapping usually looks like:
 
 ```text
 DTO -> frontend/domain/UI model
 ```
 
-خود UI model را نباید صرفاً DTO نامید.
+The UI model itself should not automatically be called a DTO.
 
 ---
 
@@ -309,48 +309,46 @@ DTO -> frontend/domain/UI model
 
 # 3.1 SRP — Single Responsibility Principle
 
-تعریف ضعیف:
+Weak definition:
 
-> هر function فقط یک کار انجام دهد.
+> Every function should do one thing.
 
-Mental model بهتر:
+Better mental model:
 
-> یک boundary باید reasonهای تغییر closely related داشته باشد، نه policy/actorهای مستقل متعدد.
+> A boundary should have closely related reasons to change, rather than multiple independent policies, actors, or concerns.
 
 ## Responsibility depends on abstraction level
 
-یک page می‌تواند چند step را orchestrate کند و هنوز cohesive باشد، چون responsibility سطح بالاتر آن:
+A page can orchestrate several steps and still be cohesive if its higher-level responsibility is something like:
 
 ```text
 Handle checkout submission
 ```
 
-است.
-
 ## OrderHistory example
 
-مسئله:
+The scenario included:
 
-- read user
-- fetch orders
-- map backend fields
-- filter status
-- export CSV
-- render
+- reading the user
+- fetching orders
+- mapping backend fields
+- filtering by status
+- exporting CSV
+- rendering
 
-تحلیل:
+Analysis:
 
-`status filtering` می‌تواند presentation policy مرتبط با OrderHistory باشد و local بماند.
+`status filtering` may be a presentation policy that belongs naturally to OrderHistory and can remain local.
 
-ولی:
+But:
 
 ```text
 HTTP/endpoint/DTO mapping
 ```
 
-reason مستقلی برای change دارد.
+has an independent reason to change.
 
-CSV هم باید با معیار reuse تصمیم‌گیری نشود.
+CSV extraction should also not be decided primarily by reuse.
 
 ### Important correction
 
@@ -358,9 +356,9 @@ CSV هم باید با معیار reuse تصمیم‌گیری نشود.
 Reuse != primary SRP criterion
 ```
 
-حتی چیزی که فقط یک‌جا استفاده می‌شود ممکن است policy مستقل داشته باشد و separation ارزشمند باشد.
+Something used only once can still deserve separation if it has an independent reason to change.
 
-مثلاً CSV export format ممکن است مستقل از page تغییر کند.
+For example, CSV export format may evolve independently of the page.
 
 ---
 
@@ -368,11 +366,11 @@ Reuse != primary SRP criterion
 
 Mental model:
 
-> High-level policy باید contract مورد نیاز خودش را تعریف کند، نه اینکه shape یک low-level dependency را copy کند.
+> High-level policy should depend on a contract expressed in its own language, rather than copying the shape of a low-level dependency.
 
 ## Article draft example
 
-Implementation مستقیم:
+Direct implementation:
 
 ```ts
 function saveDraft(articleId: string, draft: ArticleDraft) {
@@ -383,7 +381,7 @@ function saveDraft(articleId: string, draft: ArticleDraft) {
 }
 ```
 
-Generic abstraction وسوسه‌کننده:
+Tempting generic abstraction:
 
 ```ts
 interface Storage {
@@ -392,14 +390,14 @@ interface Storage {
 }
 ```
 
-این abstraction هنوز caller را به این semantics coupled می‌کند:
+This abstraction still couples callers to:
 
-- key-value storage
+- key-value storage semantics
 - strings
 - key naming
 - serialization
 
-Contract feature-owned بهتر:
+A feature-owned contract can be better:
 
 ```ts
 interface ArticleDraftRepository {
@@ -408,11 +406,11 @@ interface ArticleDraftRepository {
 }
 ```
 
-حالا high-level code به language خودش وابسته است.
+Now the high-level code depends on its own domain language.
 
 ## Two-layer abstraction
 
-اگر واقعاً چند key-value backend داریم:
+If there are genuinely multiple key-value backends:
 
 ```text
 useDraftArticle
@@ -424,16 +422,16 @@ KeyValueStorage
 LocalStorageAdapter / IndexedDBAdapter
 ```
 
-ممکن است منطقی باشد.
+this can make sense.
 
-اما فقط وقتی هر variation point واقعاً value داشته باشد.
+But only when each variation point adds real value.
 
 ## Important corrections
 
-- domain-specific coupling بد نیست؛ اغلب desirable است.
-- generic abstraction لزوماً coupling را کاهش نمی‌دهد.
-- direct `localStorage` برای feature کوچک و stable می‌تواند کاملاً acceptable باشد.
-- Cookie همیشه drop-in replacement برای key-value storage نیست؛ semantics متفاوت دارد.
+- Domain-specific coupling is not automatically bad; it is often desirable.
+- A generic abstraction does not automatically reduce coupling.
+- Direct `localStorage` can be completely acceptable for a small, stable, local-only feature.
+- Cookies are not automatically a drop-in replacement for key-value storage because their semantics differ.
 
 ---
 
@@ -441,9 +439,9 @@ LocalStorageAdapter / IndexedDBAdapter
 
 Mental model:
 
-> Consumer نباید به capabilityهایی وابسته باشد که نیاز ندارد.
+> A consumer should not depend on capabilities it does not need.
 
-مسئله:
+Problematic contract:
 
 ```ts
 interface ProductDataSource {
@@ -464,9 +462,9 @@ ProductDetails -> getById + subscribeToStock
 AdminEditor -> getById + create/update/delete
 ```
 
-یک interface بزرگ consumerها را unnecessarily coupled می‌کند.
+A single large interface unnecessarily couples consumers to unrelated capabilities.
 
-ممکن است split کنیم:
+A better split may be:
 
 ```ts
 interface ProductReader {
@@ -491,7 +489,7 @@ interface ProductEditor {
 }
 ```
 
-و composition:
+Composition:
 
 ```ts
 type ProductDetailsDependencies =
@@ -503,35 +501,35 @@ type AdminProductEditorDependencies =
 
 ## Important correction
 
-این design:
+This design is problematic:
 
 ```ts
 interface AdminDataSource
   extends ProductDetailsDataSource {}
 ```
 
-اگر ProductDetails شامل `subscribeToStock` باشد، دوباره ISP را نقض می‌کند.
+If `ProductDetailsDataSource` also contains `subscribeToStock`, then Admin receives a capability it does not need and ISP is violated again.
 
 ## Another correction
 
-دو extreme بد:
+Two bad extremes are:
 
 ```text
 One giant interface
 ```
 
-و
+and:
 
 ```text
 One generic interface per method:
 Readable / Writable / Searchable / Subscribable
 ```
 
-هدف:
+The goal is:
 
-> smallest meaningful consumer contract
+> the smallest meaningful consumer contract
 
-نه smallest possible type.
+not the smallest possible type.
 
 ---
 
@@ -539,7 +537,7 @@ Readable / Writable / Searchable / Subscribable
 
 Mental model:
 
-> Type compatibility کافی نیست؛ replacement باید observable behavioral contract را حفظ کند.
+> Type compatibility is not enough; a replacement must preserve the observable behavioral contract.
 
 ```text
 Type-compatible
@@ -547,7 +545,7 @@ Type-compatible
 Behaviorally substitutable
 ```
 
-Frontend contexts:
+Frontend contexts include:
 
 - components
 - adapters
@@ -559,19 +557,19 @@ Frontend contexts:
 
 ## Preconditions
 
-Replacement نباید precondition قوی‌تری بخواهد.
+A replacement must not require stronger preconditions than the contract implies.
 
-اگر contract می‌گوید:
+If the contract says:
 
 ```ts
 search(query: string): Promise<Result>
 ```
 
-و implementation جدید بدون declaration روی query کوتاه‌تر از 3 throw کند، precondition را strengthen کرده است.
+and a new implementation throws whenever the query is shorter than three characters without that rule being part of the contract, then it has strengthened the precondition.
 
 ## Postconditions
 
-Replacement نباید guarantee ضعیف‌تری بدهد.
+A replacement must not weaken the guarantees promised by the contract.
 
 ## UserPreferencesStore example
 
@@ -584,7 +582,7 @@ interface UserPreferencesStore {
 }
 ```
 
-Local:
+Local implementation:
 
 ```ts
 class LocalPreferencesStore
@@ -606,7 +604,7 @@ class LocalPreferencesStore
 }
 ```
 
-Remote مشکل‌دار:
+Problematic remote implementation:
 
 ```ts
 class RemotePreferencesStore
@@ -637,37 +635,37 @@ class RemotePreferencesStore
 
 ### `load()` problem
 
-Local روی missing data:
+The local implementation treats missing data as:
 
 ```text
-returns defaults
+return defaults
 ```
 
-Remote:
+while the remote implementation:
 
 ```text
 throws
 ```
 
-Consumer-visible semantics متفاوت است.
+The consumer-visible semantics differ.
 
 ### `save()` subtle problem
 
-Remote روی failure فقط log می‌کند و resolve می‌شود.
+The remote implementation merely logs on failure and still resolves.
 
-Caller:
+A caller doing:
 
 ```ts
 await store.save(preferences);
 ```
 
-از resolve شدن معمولاً success برداشت می‌کند.
+will naturally interpret successful resolution as a successful save.
 
-پس postcondition ضعیف شده است.
+So the postcondition has been weakened.
 
 ## Better explicit contract
 
-مثلاً:
+For example:
 
 ```ts
 type LoadPreferencesResult =
@@ -684,31 +682,31 @@ type LoadPreferencesResult =
     };
 ```
 
-یا rejection semantics را واضح تعریف کنیم.
+Or the contract can clearly define rejection semantics.
 
 ### Important TypeScript correction
 
-`Promise<UserPreferences>` خودش guarantee نمی‌کند Promise reject نمی‌شود.
+`Promise<UserPreferences>` does not itself guarantee that the Promise cannot reject.
 
-مسئله‌ی اصلی semantic contract است، نه صرفاً type signature.
+The real issue is the semantic contract, not only the type signature.
 
 ### Gap discovered
 
-Violation مربوط به `load()` مستقل تشخیص داده شد، اما `save()` postcondition ابتدا miss شد و نیاز به correction داشت.
+The `load()` incompatibility was identified independently, but the subtler `save()` postcondition issue was initially missed and required correction.
 
 ---
 
 # 3.5 OCP — Open/Closed Principle
 
-تعریف slogan:
+Slogan version:
 
 > Open for extension, closed for modification.
 
-Mental model بهتر:
+Better mental model:
 
-> برای variationهای واقعی و expected، stable core را طوری طراحی کن که برای اضافه کردن capability جدید مجبور نباشیم بارها core logic را تغییر دهیم.
+> For real and expected variations, design the stable core so that adding a capability does not repeatedly force changes into stable logic.
 
-کلیدها:
+The key ideas are:
 
 ```text
 Stable core
@@ -718,13 +716,13 @@ Meaningful variation point
 
 ## OCP does not mean zero modification
 
-Registry/config/composition root ممکن است تغییر کند.
+Configuration, registries, or the composition root may legitimately change.
 
-هدف این است که stable behavior تغییر نکند.
+The goal is to keep stable behavior stable.
 
 ## Analytics example
 
-Initial:
+Initial implementation:
 
 ```ts
 function track(
@@ -747,9 +745,9 @@ Requirements:
 - GA / Amplitude now
 - Mixpanel likely later
 - enterprise custom providers
-- app code must not know provider
+- application code must not know the provider
 - one provider per deployment
-- provider selected at startup/config
+- provider selected at startup/configuration
 
 Stable contract:
 
@@ -767,7 +765,7 @@ class AmplitudeAnalytics implements Analytics {}
 class MixpanelAnalytics implements Analytics {}
 ```
 
-Application:
+Application code:
 
 ```ts
 analytics.track(event);
@@ -775,47 +773,45 @@ analytics.track(event);
 
 ## Factory / Registry decision
 
-در این scenario:
+In this scenario:
 
-- Strategy-like provider implementation مناسب است.
-- startup switch کافی است.
-- Factory class لزوماً value اضافه نمی‌کند.
-- Registry احتمالاً over-engineering است اگر فقط یک provider active داریم و set کوچک است.
+- Strategy-like provider implementations are appropriate.
+- A startup switch is enough.
+- A dedicated Factory class does not necessarily add value.
+- A Registry is probably over-engineering if there is only one active provider and the known set is small.
 
 ### Important correction
 
-`provider` string خودش variation point نیست؛ بیشتر selector/discriminator است.
+The `provider` string is mostly a selector/discriminator.
 
-Variation point واقعی:
+The real variation point is:
 
 ```text
-family of Analytics implementations
+the family of Analytics implementations
 ```
 
 ### Runtime config correction
 
-در frontend، `import.meta.env` معمولاً build-time substitution است.
+In frontend applications, `import.meta.env` is usually substituted at build time.
 
-True runtime selection نیاز به mechanismهایی مثل:
+True runtime selection needs something like:
 
-- server-injected global
-- runtime config file
-- config endpoint
+- server-injected globals
+- a runtime config file
+- a config endpoint
 
-دارد.
+## OCP and extension-point trade-off
 
-## OCP and extension point trade-off
+Extension points cost something:
 
-Extension point هزینه دارد:
-
-- interface
+- interfaces
 - wiring
 - registration
 - testing
 - indirection
 - conceptual overhead
 
-پس:
+Therefore:
 
 ```text
 possible variation
@@ -827,7 +823,7 @@ automatic extension point
 
 # 4. Strategy / Factory / State
 
-این سه به‌راحتی قاطی می‌شوند.
+These three are easy to confuse.
 
 ## Mental map
 
@@ -846,7 +842,7 @@ Given my current lifecycle state, what behavior/transition is valid now?
 
 ## 4.1 Strategy
 
-مثال:
+Example:
 
 ```ts
 interface FileUploader {
@@ -873,11 +869,11 @@ function uploadFile(
 }
 ```
 
-نکته:
+Important point:
 
-فقط وجود interface و چند implementation Strategy نمی‌سازد.
+The existence of an interface and multiple implementations alone does not automatically make something Strategy.
 
-Strategy زمانی meaningful است که consumer **behavior را delegate** کند به selected implementation.
+Strategy becomes meaningful when the consumer **delegates variable behavior** to the selected implementation.
 
 ---
 
@@ -904,11 +900,11 @@ Responsibility:
 selection / creation knowledge
 ```
 
-Factory switch را magically حذف نمی‌کند.
+A Factory does not magically remove the switch.
 
-فقط concrete-selection knowledge را localize می‌کند.
+It localizes knowledge about concrete creation/selection.
 
-Factory به‌تنهایی OCP را guarantee نمی‌کند.
+Factory alone does not guarantee OCP.
 
 ---
 
@@ -924,9 +920,9 @@ idle
 → completed / failed
 ```
 
-Behavior بر اساس current lifecycle state تغییر می‌کند.
+Behavior changes according to the current lifecycle state.
 
-مثلاً `SUBMIT` در `idle/editing` ممکن است valid باشد ولی در `submitting` ignored شود.
+For example, `SUBMIT` may be valid in `idle/editing` but ignored in `submitting`.
 
 Mental shortcut:
 
@@ -935,7 +931,7 @@ Strategy = How?
 State = What can I do now?
 ```
 
-## Three together
+## All three together
 
 ```text
 Factory
@@ -948,7 +944,7 @@ State
 → upload workflow owns lifecycle/transitions
 ```
 
-این patternها جایگزین هم نیستند.
+These patterns are not substitutes for one another.
 
 ---
 
@@ -956,7 +952,7 @@ State
 
 Mental model:
 
-> یک foreign/external contract را به contract داخلی مورد انتظار سیستم translate کن.
+> Translate a foreign/external contract into the internal contract the system wants to use.
 
 ```text
 Foreign API
@@ -1018,7 +1014,7 @@ interface MapService {
 }
 ```
 
-Mapbox-specific tuples:
+Mapbox-specific tuple shape:
 
 ```ts
 mapboxDirections.getRoute({
@@ -1029,7 +1025,7 @@ mapboxDirections.getRoute({
 });
 ```
 
-Mapping باید داخل Adapter بماند.
+The mapping should remain inside the Adapter.
 
 ```ts
 class MapboxMapService implements MapService {
@@ -1051,13 +1047,13 @@ class MapboxMapService implements MapService {
 
 ## Important reasoning demonstrated
 
-حتی بدون migration قطعی به MapLibre، Adapter می‌تواند ارزش داشته باشد چون **امروز** foreign shape/semantics را isolate می‌کند.
+Even without a confirmed migration to MapLibre, the Adapter may already be valuable because it isolates foreign shape and semantics **today**.
 
-Future change فقط دلیل تقویتی است.
+Future migration is only an additional justification.
 
 ## Adapter misuse
 
-اگر فقط mirror کنیم:
+If we merely mirror another API:
 
 ```ts
 class FetchAdapter {
@@ -1067,13 +1063,13 @@ class FetchAdapter {
 }
 ```
 
-ولی semantic isolation یا translation نداریم، abstraction احتمالاً ceremony است.
+without semantic isolation or translation, the abstraction may be ceremony.
 
 ### Important rule
 
-Contract را از نیاز feature بساز، نه از لیست methodهای provider.
+Build the contract from feature needs, not from the provider's method list.
 
-بد:
+Bad example:
 
 ```ts
 interface MapService {
@@ -1087,7 +1083,7 @@ interface MapService {
 }
 ```
 
-اگر فقط Mapbox API را copy کرده‌ایم.
+if this is just a copy of the Mapbox API.
 
 ---
 
@@ -1095,9 +1091,9 @@ interface MapService {
 
 Mental model:
 
-> یک subsystem پیچیده را پشت API ساده‌تر و intent-level پنهان کن.
+> Hide a complex subsystem behind a simpler, intent-level API.
 
-Facade با Adapter فرق دارد:
+Facade differs from Adapter:
 
 ```text
 Adapter = translate interface/contract
@@ -1106,7 +1102,7 @@ Facade  = simplify subsystem knowledge
 
 ## Checkout example
 
-بدون Facade:
+Without a Facade:
 
 ```text
 Component
@@ -1127,7 +1123,7 @@ interface CheckoutService {
 }
 ```
 
-Consumer فقط intent را می‌داند.
+The consumer only expresses intent.
 
 ## Avatar update example
 
@@ -1168,7 +1164,7 @@ UI concern:
 toast
 ```
 
-می‌تواند در component بماند.
+can stay in the component.
 
 Upload subsystem:
 
@@ -1178,15 +1174,13 @@ create upload session
 → confirm upload
 ```
 
-می‌تواند پشت:
+can live behind:
 
 ```ts
 interface AvatarUploader {
   upload(file: Blob): Promise<UploadedAvatar>;
 }
 ```
-
-برود.
 
 Higher-level facade/orchestrator:
 
@@ -1222,7 +1216,7 @@ toast.success("Avatar updated");
 
 ## Important correction: code movement is not Facade value
 
-اگر فقط همان lines را از function A به class B ببریم:
+If we simply move the same lines from function A into class B:
 
 ```text
 No knowledge removed
@@ -1230,9 +1224,9 @@ No smaller contract
 No cohesive boundary
 ```
 
-فقط code moved شده است.
+we have only moved code.
 
-Facade وقتی value دارد که consumer دیگر subsystem details را نداند.
+A Facade adds value when the consumer no longer needs to know subsystem details.
 
 ## God Facade smell
 
@@ -1247,21 +1241,21 @@ class UserFacade {
 }
 ```
 
-مشکل:
+Problems:
 
 - unrelated reasons to change
 - huge dependency surface
 - low cohesion
 
-Shared noun مثل `User` دلیل کافی برای یک boundary مشترک نیست.
+A shared noun such as `User` is not enough reason to put everything behind one boundary.
 
 ## Query cache trade-off
 
-`queryClient.invalidateQueries()` می‌تواند داخل application-level facade باشد اگر cache consistency بخشی از use case completion باشد.
+`queryClient.invalidateQueries()` can reasonably live inside an application-level Facade if cache consistency is part of use-case completion.
 
-اما این facade را به TanStack Query coupled می‌کند.
+But this couples the Facade to TanStack Query.
 
-اگر independence مهم باشد:
+If independence matters:
 
 ```ts
 interface CurrentUserCache {
@@ -1269,7 +1263,9 @@ interface CurrentUserCache {
 }
 ```
 
-اما این abstraction فقط وقتی ارزش دارد که cost آن justify شود.
+may be preferable.
+
+But this abstraction should only exist if its maintenance cost is justified.
 
 ---
 
@@ -1277,7 +1273,7 @@ interface CurrentUserCache {
 
 Mental model:
 
-> وقتی یک event/change رخ داده و چند consumer مستقل باید مطلع شوند، بدون اینکه publisher تک‌تک آن‌ها را بشناسد.
+> When an event/change occurs and multiple independent consumers should be notified without the publisher knowing each concrete consumer.
 
 ```text
 Publisher
@@ -1303,7 +1299,7 @@ events.on("order.created", updateActivityFeed);
 
 ## Observer does not remove coupling
 
-Coupling تبدیل می‌شود به:
+Coupling becomes:
 
 ```text
 publisher
@@ -1311,11 +1307,11 @@ publisher
 ← subscriber
 ```
 
-یعنی semantic coupling هنوز وجود دارد.
+So semantic coupling still exists.
 
 ## Hidden coupling problem
 
-اگر core flow را event bus کنیم:
+If we turn a core workflow into an event chain:
 
 ```text
 order.created
@@ -1326,11 +1322,11 @@ order.confirmed
 → clear cart observer
 ```
 
-flow سخت‌تر trace می‌شود.
+the flow becomes harder to trace.
 
-## Core vs Secondary reactions
+## Core vs secondary reactions
 
-قانون بسیار مهم:
+Very important rule:
 
 ```text
 Core consequence / required ordering
@@ -1346,49 +1342,49 @@ Steps:
 
 1. save access token
 2. fetch current user
-3. route dashboard
+3. route to dashboard
 4. analytics
 5. start WebSocket
 6. refresh notification badge
 
-تحلیل درست:
+Correct analysis:
 
 Core:
 
 - token persistence
 - current user load
 - authenticated WebSocket startup
-- navigation (بسته به contract flow)
+- navigation, depending on flow contract
 
 Secondary:
 
 - analytics
-- notification refresh اگر stale بودن موقت acceptable باشد
+- notification refresh if temporary staleness is acceptable
 
 ### Temporal coupling discovered
 
-WebSocket ممکن است token لازم داشته باشد.
+WebSocket may require the token.
 
-پس:
+Therefore:
 
 ```text
 save token
 → then connect WebSocket
 ```
 
-اگر هر دو independent subscriber باشند، race ایجاد می‌شود.
+If both are independent subscribers, a race can occur.
 
 ### Failure semantics
 
-Analytics failure نباید login را fail کند.
+Analytics failure should not fail login.
 
-اما token persistence failure ممکن است login completion را fail کند.
+Token persistence failure may prevent login completion.
 
 ## Observer vs React data flow
 
-برای sibling/component communication فقط برای فرار از props نباید global event bus ساخت.
+A global event bus should not be introduced merely to avoid props or normal state ownership.
 
-اول بررسی کن:
+First consider:
 
 - state ownership
 - props
@@ -1396,11 +1392,11 @@ Analytics failure نباید login را fail کند.
 - store
 - router state
 
-Event bus می‌تواند data flow را invisible کند.
+An event bus can make data flow invisible.
 
 ## Lifecycle risks
 
-Observer نیاز به cleanup دارد:
+Observers usually require cleanup:
 
 ```ts
 useEffect(() => {
@@ -1409,7 +1405,7 @@ useEffect(() => {
 }, []);
 ```
 
-وگرنه:
+Otherwise you may get:
 
 - duplicate listeners
 - stale closures
@@ -1422,19 +1418,19 @@ useEffect(() => {
 
 Mental model:
 
-> یک executable intent/action را first-class representation بده تا بتواند independently trigger, queue, retry, log, undo یا bulk execute شود.
+> Give an executable intent/action a first-class representation so it can be independently triggered, queued, retried, logged, undone, or bulk executed.
 
 ## Callback vs Command
 
-این فقط callback است:
+This is just a callback:
 
 ```tsx
 <button onClick={() => save()} />
 ```
 
-Command زمانی value دارد که action metadata/lifecycle نیاز دارد.
+Command becomes valuable when an action needs metadata or lifecycle management.
 
-مثلاً:
+For example:
 
 ```ts
 interface Command {
@@ -1466,9 +1462,9 @@ Reset Password
 Export User Data
 ```
 
-همان intentها از چند surface اجرا می‌شوند.
+The same intents can be invoked from several surfaces.
 
-این scenario Command را justify می‌کند.
+This meaningfully justifies Command.
 
 ## Command vs Event
 
@@ -1484,17 +1480,17 @@ SuspendUserCommand
 user.suspended
 ```
 
-اولی می‌گوید:
+The first means:
 
-> این کار را انجام بده.
+> Perform this action.
 
-دومی می‌گوید:
+The second means:
 
-> این اتفاق افتاد.
+> This happened.
 
 ## Permission / authorization
 
-`canExecute()` در frontend می‌تواند capability/UX check باشد:
+`canExecute()` in the frontend can be useful for capability/UX checks:
 
 ```ts
 if (!command.canExecute()) {
@@ -1502,9 +1498,9 @@ if (!command.canExecute()) {
 }
 ```
 
-اما security boundary نیست.
+But it is not a security boundary.
 
-Backend باید authorization واقعی را enforce کند.
+The backend must still enforce real authorization.
 
 ## Confirmation distinction
 
@@ -1514,21 +1510,21 @@ Pre-execution UI confirmation:
 Are you sure you want to suspend this user?
 ```
 
-معمولاً invoker/UI concern است.
+is usually an invoker/UI concern.
 
 Post-execution verification:
 
-> آیا operation واقعاً کامل شد؟
+> Did the operation actually complete successfully?
 
-بخشی از command/use-case completion semantics است.
+is part of command/use-case completion semantics.
 
-این دو نباید conflated شوند.
+These two should not be conflated.
 
 ## Analytics
 
-Cross-cutting analytics بهتر است لزوماً داخل هر Command hardcode نشود.
+Cross-cutting analytics does not necessarily belong hardcoded inside every Command.
 
-می‌تواند decorator/orchestrator باشد.
+It can live in a decorator or orchestrator.
 
 ```text
 Analytics wrapper
@@ -1538,25 +1534,25 @@ Command.execute()
 
 ## Bulk execution
 
-Command pattern bulk را ممکن می‌کند، اما policy را تعیین نمی‌کند.
+Command makes bulk execution possible, but the pattern does not define the execution policy.
 
-باید explicit شود:
+You still need to decide:
 
 - sequential vs parallel
 - fail-fast vs continue
-- partial success
+- partial success semantics
 - retry
 - rollback
 
 ## Over-engineering
 
-برای interaction ساده:
+For a simple local interaction:
 
 ```ts
 setOpen(true)
 ```
 
-ساختن:
+creating:
 
 ```text
 OpenModalCommand
@@ -1564,7 +1560,7 @@ CloseModalCommand
 ToggleDropdownCommand
 ```
 
-احتمالاً ceremony است.
+is probably ceremony.
 
 ---
 
@@ -1572,7 +1568,7 @@ ToggleDropdownCommand
 
 Mental model:
 
-> وقتی چند peer/component برای یک interaction مشترک coordination policy دارند، direct communication را در یک central coordination boundary جمع کن.
+> When several peers/components participate in shared coordination rules, centralize the coordination policy instead of letting every peer talk directly to every other peer.
 
 ## Booking example
 
@@ -1587,7 +1583,7 @@ PricePreview
 SearchButton
 ```
 
-بد:
+Problematic shape:
 
 ```text
 OriginSelector knows DestinationSelector
@@ -1606,15 +1602,15 @@ Booking coordinator / shared owner
 coordination policy
 ```
 
-در frontend modern لازم نیست class بنویسیم.
+In modern frontend code, this does not require a class.
 
-Mediator role ممکن است باشد:
+The Mediator role can be played by:
 
-- custom hook
-- state machine
-- feature controller
-- provider
-- shared state owner
+- a custom hook
+- a state machine
+- a feature controller
+- a provider
+- a shared state owner
 
 ## Mediator vs Observer
 
@@ -1633,20 +1629,20 @@ A changed
 → decides effects on B/C/D
 ```
 
-اگر ordering/coordination rule مهم است، Mediator مناسب‌تر است.
+If ordering or coordination rules matter, Mediator is usually a better fit.
 
 ## Dashboard resize example
 
 Resize requires:
 
 - layout recalculation
-- neighbor resize
-- grid constraints
+- neighbor resizing
+- grid constraint validation
 - autosave scheduling
 
-این‌ها coordinated هستند و Mediator-like boundary مناسب است.
+These concerns are coordinated, so a Mediator-like boundary is appropriate.
 
-Analytics اگر secondary observation باشد بهتر است از mediator core جدا بماند.
+Analytics should remain outside the mediator core if it is only a secondary observation.
 
 ## God Mediator smell
 
@@ -1660,9 +1656,9 @@ class AppMediator {
 }
 ```
 
-این cohesion را از بین می‌برد.
+This destroys cohesion.
 
-Mediator باید subsystem-specific باشد.
+A Mediator should remain subsystem-specific.
 
 ---
 
@@ -1670,7 +1666,7 @@ Mediator باید subsystem-specific باشد.
 
 Mental model:
 
-> وقتی leaf و group/tree از همان concept را با interface/operation تقریباً یکسان می‌خواهیم مدل کنیم.
+> Model a recursive whole/part structure so leaf nodes and grouped nodes can be treated through a common model or operation.
 
 ## Dashboard tree
 
@@ -1685,7 +1681,7 @@ Dashboard
         └── Chart
 ```
 
-این recursive whole/part structure است.
+This is a recursive whole/part structure.
 
 ## Menu example
 
@@ -1728,7 +1724,7 @@ function MenuNodeView({ node }: { node: MenuNode }) {
 
 ## Composite misuse
 
-وجود array یا nested JSX کافی نیست.
+Having an array or nested JSX is not enough.
 
 ```text
 ordinary collection
@@ -1736,31 +1732,31 @@ ordinary collection
 Composite
 ```
 
-Pattern زمانی meaningful است که recursive whole/part semantics وجود داشته باشد.
+The pattern is meaningful when recursive whole/part semantics genuinely exist.
 
 ---
 
 # 11. Cross-pattern mental map
 
-| Concept | سؤال اصلی |
+| Concept | Core question |
 |---|---|
-| Cohesion | آیا responsibilityهای این boundary واقعاً به یک هدف تعلق دارند؟ |
-| Coupling | این boundary چه knowledge غیرضروری‌ای از بقیه دارد؟ |
-| GRASP | responsibility را به چه کسی بدهیم و چرا؟ |
-| SRP | چه reasonهای مستقلی برای change داریم؟ |
-| DIP | high-level policy به contract خودش وابسته است یا shape low-level dependency؟ |
-| ISP | آیا consumer به capabilityهای اضافی وابسته شده؟ |
-| LSP | آیا replacement observable contract را حفظ می‌کند؟ |
-| OCP | stable core کجاست و variation واقعی کجاست؟ |
-| Strategy | behavior را با چه algorithm/implementation انجام بدهم؟ |
-| Factory | کدام implementation را create/resolve کنم؟ |
-| State | با توجه به current lifecycle state چه behavior/transition مجاز است؟ |
-| Adapter | foreign contract را چطور به internal contract translate کنم؟ |
-| Facade | subsystem پیچیده را چطور برای consumer ساده کنم؟ |
-| Observer | چه consumerهای مستقلی باید از event مطلع شوند؟ |
-| Command | چگونه intent اجرایی را first-class کنم؟ |
-| Mediator | coordination بین peerها را کجا centralize کنم؟ |
-| Composite | whole/part recursive structure را چطور uniform model کنم؟ |
+| Cohesion | Do the responsibilities inside this boundary genuinely belong to one purpose? |
+| Coupling | What unnecessary knowledge does this boundary have about other parts? |
+| GRASP | Who should own this responsibility, and why? |
+| SRP | What independent reasons to change exist here? |
+| DIP | Does high-level policy depend on its own contract or on the shape of a low-level dependency? |
+| ISP | Is a consumer forced to depend on capabilities it does not need? |
+| LSP | Does the replacement preserve the observable behavioral contract? |
+| OCP | Where is the stable core and where is the real variation point? |
+| Strategy | Which behavior/algorithm should perform this operation? |
+| Factory | Which implementation should be created/resolved? |
+| State | Given the current lifecycle state, what behavior/transition is valid now? |
+| Adapter | How do I translate a foreign contract into the internal contract I want? |
+| Facade | How do I simplify a cohesive complex subsystem for the consumer? |
+| Observer | Which independent consumers should react to an event? |
+| Command | How do I make an executable intent first-class? |
+| Mediator | Where should coordination between peers be centralized? |
+| Composite | How do I model a recursive whole/part structure uniformly? |
 
 ---
 
@@ -1776,13 +1772,13 @@ Every dependency
 → registry
 ```
 
-این design principle نیست؛ ceremony است.
+That is not design discipline. It is often ceremony.
 
 ## 12.2 Speculative abstraction
 
-> شاید بعداً عوض شود.
+> Maybe this will change later.
 
-به‌تنهایی دلیل کافی نیست.
+That alone is not enough justification.
 
 ## 12.3 Factory around a trivial constructor
 
@@ -1792,49 +1788,49 @@ function createUser() {
 }
 ```
 
-اگر creation/selection complexity واقعی نداریم، Factory value کمی دارد.
+If there is no real creation or selection complexity, a Factory adds little value.
 
-## 12.4 Registry when startup switch is enough
+## 12.4 Registry when a startup switch is enough
 
-اگر:
+If:
 
-- implementation set کوچک است،
-- فقط یک implementation active است،
-- runtime plugins نداریم،
+- the implementation set is small,
+- exactly one implementation is active,
+- there are no runtime plugins,
 
-یک switch در composition root ممکن است بهترین design باشد.
+then a switch in the composition root may be the clearest design.
 
 ## 12.5 Event bus to avoid explicit dependencies
 
-Dependency disappear نشده؛ فقط traceability کم شده است.
+The dependency did not disappear; traceability just got worse.
 
 ## 12.6 Facade as code relocation
 
-کپی کردن همان complexity به یک class جدید improvement نیست.
+Moving the same complexity into a new class is not automatically an improvement.
 
-## 12.7 Generic abstraction over domain contract
+## 12.7 Generic abstraction over a domain contract
 
-گاهی:
+Sometimes:
 
 ```ts
 Storage.getItem/setItem
 ```
 
-بدتر از:
+is worse than:
 
 ```ts
 ArticleDraftRepository.save/load
 ```
 
-است، چون generic abstraction هنوز low-level semantics را leak می‌کند.
+because the generic abstraction still leaks low-level semantics.
 
 ## 12.8 Tiny interfaces for every method
 
-ISP یعنی consumer-focused contract، نه fragmentation بی‌هدف.
+ISP means consumer-focused contracts, not meaningless fragmentation.
 
 ## 12.9 Command for every click
 
-برای local interaction ساده callback/state update کافی است.
+For simple local interaction, a callback or state update is enough.
 
 ## 12.10 State machine for boolean UI
 
@@ -1842,94 +1838,100 @@ ISP یعنی consumer-focused contract، نه fragmentation بی‌هدف.
 const [isOpen, setIsOpen] = useState(false);
 ```
 
-به `ClosedState`, `OpenState`, `StateFactory` نیاز ندارد.
+does not need:
+
+```text
+ClosedState
+OpenState
+StateFactory
+```
 
 ---
 
 # 13. Corrections and Gaps Discovered During the Sessions
 
-این بخش مهم‌ترین چیزهایی است که در پاسخ‌ها نیاز به refinement یا correction داشت.
+This section captures the most important points that required refinement or correction during the discussions.
 
 ## Coupling / GRASP
 
-- `Information Expert` با orchestrator یکی نیست.
-- moving code به helper به‌تنهایی responsibility assignment را اصلاح نمی‌کند.
-- Protected Variation نباید صرفاً بر اساس «شاید تغییر کند» ایجاد شود.
-- orchestration ownership باید explicit باشد.
+- `Information Expert` is not the same as the orchestrator.
+- Moving code into a helper does not automatically improve responsibility assignment.
+- Protected Variation should not be introduced only because something *might* change someday.
+- Orchestration ownership should be explicit.
 
 ## DTO / Mapping
 
-- response backend = DTO.
-- mapper معمولاً DTO را به frontend/domain/UI model تبدیل می‌کند.
+- Backend response data is the DTO.
+- A mapper typically converts DTO -> frontend/domain/UI model.
 
 ## SRP
 
-- reuse criterion اصلی extraction نیست.
-- یک concern ممکن است فقط یک consumer داشته باشد ولی reason مستقل برای change داشته باشد.
+- Reuse is not the primary extraction criterion.
+- A concern may have only one consumer and still deserve separation if it has an independent reason to change.
 
 ## DIP
 
-- generic abstraction لزوماً coupling کمتر ندارد.
-- domain-specific coupling اغلب desirable است.
-- direct low-level dependency گاهی ساده‌ترین design صحیح است.
+- Generic abstraction does not automatically mean lower coupling.
+- Domain-specific coupling is often desirable.
+- Direct use of a low-level dependency is sometimes the simplest correct design.
 
 ## ISP
 
-- interface inheritance می‌تواند capability ناخواسته را دوباره وارد consumer کند.
-- page-specific naming نباید shared semantic capability را unnecessarily به UI name قفل کند.
+- Interface inheritance can accidentally reintroduce unwanted capabilities.
+- Page-specific naming should not unnecessarily lock a shared semantic capability to a UI page name.
 
 ## LSP
 
-- `load()` incompatibility مستقل تشخیص داده شد.
-- subtle `save()` postcondition ابتدا miss شد.
-- Promise type به‌تنهایی error semantics را بیان نمی‌کند.
+- The `load()` incompatibility was identified independently.
+- The subtler `save()` postcondition issue was initially missed.
+- Promise types alone do not express failure semantics.
 
 ## OCP
 
-- provider string بیشتر selector است؛ implementation family variation point است.
-- OCP به معنی zero modification نیست.
-- Factory به‌تنهایی OCP را تضمین نمی‌کند.
-- registry همیشه بهتر نیست.
+- A provider string is usually the selector; the implementation family is the variation point.
+- OCP does not mean zero modifications anywhere.
+- Factory alone does not guarantee OCP.
+- A Registry is not always a better design.
 
 ## Strategy / Factory / State
 
-- Strategy با وجود interface تعریف نمی‌شود؛ delegation intent مهم است.
-- Factory مسئول creation/selection است.
-- State مربوط به lifecycle/current-state-driven behavior است.
+- Strategy is not defined by the existence of an interface; delegation intent matters.
+- Factory owns creation/selection.
+- State is about lifecycle/current-state-driven behavior.
 
 ## Adapter
 
-- future migration به‌تنهایی justification کافی نیست.
-- value اصلی می‌تواند translation و isolation فعلی باشد.
-- Adapter نباید external API را یک‌به‌یک mirror کند.
+- Future migration alone is not enough justification.
+- Current translation and isolation can be the main value.
+- An Adapter should not mirror an external API one-to-one without purpose.
 
 ## Facade
 
-- code relocation != useful Facade.
-- cache invalidation داخل Facade یک trade-off است؛ ممکن است library coupling ایجاد کند.
-- God Facade خطر مهم است.
+- Code relocation is not the same as a useful Facade.
+- Cache invalidation inside a Facade is a trade-off because it can introduce library coupling.
+- God Facade is a major risk.
 
 ## Observer
 
-- event bus coupling را حذف نمی‌کند؛ semantic coupling باقی می‌ماند.
-- core ordered workflow نباید صرفاً برای decoupling به events شکسته شود.
-- ordering، failure isolation و lifecycle/unsubscribe مهم‌اند.
+- An event bus does not eliminate coupling; semantic coupling remains.
+- Core ordered workflows should not be fragmented into events merely for the appearance of decoupling.
+- Ordering, failure isolation, and lifecycle/unsubscribe behavior matter.
 
 ## Command
 
-- frontend permission check security boundary نیست.
-- pre-execution confirmation با post-execution verification فرق دارد.
-- bulk execution policy باید explicit باشد.
+- Frontend permission checks are not the security boundary.
+- Pre-execution confirmation differs from post-execution verification.
+- Bulk execution policy must be explicit.
 
 ## Mediator
 
-- analytics اگر secondary باشد نباید بی‌دلیل mediator cohesion را خراب کند.
-- Mediator باید subsystem-specific بماند.
+- Analytics should not be folded into the mediator automatically if it is only a secondary reaction.
+- A Mediator should remain subsystem-specific.
 
 ## Composite
 
-- nesting/array به‌تنهایی Composite نیست.
-- recursive whole/part semantics مهم است.
+- Nesting or arrays alone do not imply Composite.
+- Recursive whole/part semantics are the important signal.
 
 ---
 
@@ -1944,14 +1946,14 @@ Design Principles & Patterns
 
 Reason for not upgrading to `4 — REASON` yet:
 
-- first pass قوی و applied بوده،
-- ولی transfer باید در spaced retestهای جدید و بدون pattern-name cue دوباره ثابت شود،
-- بعضی corrected details هنوز باید بدون hint بازتولید شوند.
+- the first pass was strong and applied,
+- transfer still needs to be demonstrated in spaced retests with fresh scenarios and no pattern-name cues,
+- some corrected details still need to be reproduced independently without hints.
 
 ### Strong evidence so far
 
-- coupling/cohesion در scenarios واقعی frontend
-- responsibility boundary reasoning
+- coupling/cohesion in realistic frontend scenarios
+- responsibility-boundary reasoning
 - applied SRP/DIP/ISP/LSP
 - OCP stable-core vs variation-point reasoning
 - Strategy/Factory/State differentiation
@@ -1967,13 +1969,13 @@ Reason for not upgrading to `4 — REASON` yet:
 
 Topics that should reappear later without hints:
 
-- coupling/cohesion under a fresh feature
+- coupling/cohesion in a fresh feature
 - GRASP Information Expert vs Controller/orchestrator
 - abstraction threshold: direct dependency vs port/adapter
-- SRP without using reuse as extraction criterion
-- DIP where generic abstraction is tempting
+- SRP without using reuse as the main extraction criterion
+- DIP where a generic abstraction is tempting
 - ISP composition/inheritance
-- LSP postconditions/error semantics
+- LSP postconditions and error semantics
 - OCP with dynamic plugin/registry requirements
 - Strategy vs Factory vs State without names
 - Adapter vs direct third-party use
@@ -1984,7 +1986,7 @@ Topics that should reappear later without hints:
 - Command vs callback/action/event
 - Command bulk failure semantics
 - Mediator vs ordinary shared state ownership
-- Composite vs normal collection/nested JSX
+- Composite vs normal collections/nested JSX
 
 ---
 
@@ -2054,7 +2056,7 @@ Topics that should reappear later without hints:
 
 # Final Mental Model
 
-قبل از انتخاب هر pattern، این sequence را طی کن:
+Before choosing any pattern, go through this sequence:
 
 ```text
 1. What is the actual responsibility?
@@ -2069,9 +2071,9 @@ Topics that should reappear later without hints:
 10. What failure/ordering/lifecycle semantics must remain explicit?
 ```
 
-هدف pattern استفاده کردن نیست.
+The goal is not to use patterns.
 
-هدف:
+The goal is:
 
 ```text
 clear responsibilities
@@ -2080,5 +2082,3 @@ understandable change boundaries
 predictable behavior
 appropriate extensibility
 ```
-
-است.
